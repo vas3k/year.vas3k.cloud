@@ -1,38 +1,49 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  text-align: left;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #fafafa;
 }
 
-.App-link {
-  color: #61dafb;
+.day {
+  transition: background-color 0.2s ease;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/* Only apply grey hover to uncolored days */
+.day:not([data-colored="true"]):hover {
+  background-color: #f0f0f0 !important;
+  cursor: pointer;
+}
+
+/* Texture styles */
+.texture-diagonal-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #ccc,
+    #ccc 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+
+.texture-polka-dots {
+  background-image: radial-gradient(
+    circle at 1.5px 1.5px,
+    #ccc 1.5px,
+    transparent 1.5px
+  );
+  background-size: 6px 6px;
+}
+
+.texture-square-net {
+  background-image: 
+    linear-gradient(#ccc 1px, transparent 1px),
+    linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: 6px 6px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
   }
 }
