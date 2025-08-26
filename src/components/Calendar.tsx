@@ -9,16 +9,7 @@ import LinearView from "./views/LinearView"
 import ViewSelector from "./ViewSelector"
 
 const Calendar: React.FC = () => {
-  const {
-    selectedYear,
-    coloredDays,
-    setColoredDays,
-    selectedColorTexture,
-    customTexts,
-    setCustomTexts,
-    selectedView,
-    setSelectedView,
-  } = useCalendar()
+  const { selectedYear, dateCells, setDateCells, selectedColorTexture, selectedView, setSelectedView } = useCalendar()
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -29,29 +20,23 @@ const Calendar: React.FC = () => {
       {selectedView === "Linear" ? (
         <LinearView
           selectedYear={selectedYear}
-          coloredDays={coloredDays}
-          setColoredDays={setColoredDays}
+          dateCells={dateCells}
+          setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
-          customTexts={customTexts}
-          setCustomTexts={setCustomTexts}
         />
       ) : selectedView === "Classic" ? (
         <ClassicView
           selectedYear={selectedYear}
-          coloredDays={coloredDays}
-          setColoredDays={setColoredDays}
+          dateCells={dateCells}
+          setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
-          customTexts={customTexts}
-          setCustomTexts={setCustomTexts}
         />
       ) : (
         <ColumnView
           selectedYear={selectedYear}
-          coloredDays={coloredDays}
-          setColoredDays={setColoredDays}
+          dateCells={dateCells}
+          setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
-          customTexts={customTexts}
-          setCustomTexts={setCustomTexts}
         />
       )}
 

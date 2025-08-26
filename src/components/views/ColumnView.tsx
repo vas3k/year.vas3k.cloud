@@ -1,35 +1,26 @@
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode, applyColorToDate, getDateKey } from "../../utils/colors"
+import { ColorTextureCode, DateCellData, applyColorToDate, getDateKey } from "../../utils/colors"
 import Day from "../Day"
 
 interface ColumnViewProps {
   selectedYear: number
-  coloredDays: Map<string, ColorTextureCode>
-  setColoredDays: (days: Map<string, ColorTextureCode>) => void
+  dateCells: Map<string, DateCellData>
+  setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
-  customTexts: Map<string, string>
-  setCustomTexts: (texts: Map<string, string>) => void
 }
 
-const ColumnView: React.FC<ColumnViewProps> = ({
-  selectedYear,
-  coloredDays,
-  setColoredDays,
-  selectedColorTexture,
-  customTexts,
-  setCustomTexts,
-}) => {
+const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
-    applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
+    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
   }
 
   const handleMouseEnter = (date: Date) => {
     if (isDragging) {
-      applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
+      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
     }
   }
 
@@ -52,15 +43,27 @@ const ColumnView: React.FC<ColumnViewProps> = ({
 
   const handleCustomTextChange = (date: Date, text: string) => {
     const dateKey = getDateKey(date)
-    const newCustomTexts = new Map(customTexts)
+    const newDateCells = new Map(dateCells)
+    const currentCell = dateCells.get(dateKey) || {}
 
     if (text.trim()) {
-      newCustomTexts.set(dateKey, text)
+      newDateCells.set(dateKey, {
+        ...currentCell,
+        customText: text,
+      })
     } else {
-      newCustomTexts.delete(dateKey)
+      const updatedCell = { ...currentCell }
+      delete updatedCell.customText
+
+      // If the cell has no other properties, remove it entirely
+      if (Object.keys(updatedCell).length === 0) {
+        newDateCells.delete(dateKey)
+      } else {
+        newDateCells.set(dateKey, updatedCell)
+      }
     }
 
-    setCustomTexts(newCustomTexts)
+    setDateCells(newDateCells)
   }
 
   const getDaysForMonth = (month: number): Date[] => {
@@ -140,9 +143,10 @@ const ColumnView: React.FC<ColumnViewProps> = ({
                 }
 
                 const dateKey = getDateKey(day)
-                const dayColorTexture = coloredDays.get(dateKey)
-                const isColored = dayColorTexture !== undefined
-                const customText = customTexts.get(dateKey) || ""
+                const dayData = dateCells.get(dateKey) || {}
+                const isColored = !!(dayData.color || dayData.texture)
+                const dayColorTexture = dayData.color || dayData.texture
+                const customText = dayData.customText || ""
 
                 return (
                   <td

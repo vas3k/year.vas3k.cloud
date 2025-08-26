@@ -4,12 +4,10 @@ import { useCalendar } from "../contexts/CalendarContext"
 const SaveLoadData: React.FC = () => {
   const {
     selectedYear,
-    coloredDays,
+    dateCells,
     selectedColorTexture,
-    customTexts,
     selectedView,
-    setColoredDays,
-    setCustomTexts,
+    setDateCells,
     setSelectedYear,
     setSelectedColorTexture,
     setSelectedView,
@@ -20,12 +18,11 @@ const SaveLoadData: React.FC = () => {
   const handleSaveData = () => {
     const dataToSave = {
       selectedYear,
-      coloredDays: Object.fromEntries(coloredDays),
+      dateCells: Object.fromEntries(dateCells),
       selectedColorTexture,
-      customTexts: Object.fromEntries(customTexts),
       selectedView,
       exportDate: new Date().toISOString(),
-      version: "1.0",
+      version: "2.0",
     }
 
     const blob = new Blob([JSON.stringify(dataToSave, null, 2)], {
@@ -56,38 +53,31 @@ const SaveLoadData: React.FC = () => {
       try {
         const loadedData = JSON.parse(e.target?.result as string)
 
-        // Validate the loaded data structure
         if (!loadedData || typeof loadedData !== "object") {
           alert("Invalid data file format")
           return
         }
 
-        // Merge colored days (append to existing)
-        if (loadedData.coloredDays && typeof loadedData.coloredDays === "object") {
-          const newColoredDays = new Map(coloredDays)
-          Object.entries(loadedData.coloredDays).forEach(([key, value]) => {
-            newColoredDays.set(key, value as any)
+        if (loadedData.dateCells && typeof loadedData.dateCells === "object") {
+          const newDateCells = new Map(dateCells)
+
+          Object.entries(loadedData.dateCells).forEach(([dateKey, cellData]) => {
+            const existing = newDateCells.get(dateKey) || {}
+            newDateCells.set(dateKey, {
+              ...existing,
+              ...(cellData as any),
+            })
           })
-          setColoredDays(newColoredDays)
+          setDateCells(newDateCells)
         }
 
-        // Merge custom texts (append to existing)
-        if (loadedData.customTexts && typeof loadedData.customTexts === "object") {
-          const newCustomTexts = new Map(customTexts)
-          Object.entries(loadedData.customTexts).forEach(([key, value]) => {
-            newCustomTexts.set(key, value as string)
-          })
-          setCustomTexts(newCustomTexts)
-        }
-
-        // Update other settings (these will replace current values)
         if (loadedData.selectedYear && typeof loadedData.selectedYear === "number") {
           setSelectedYear(loadedData.selectedYear)
         }
         if (loadedData.selectedColorTexture && typeof loadedData.selectedColorTexture === "string") {
           setSelectedColorTexture(loadedData.selectedColorTexture)
         }
-        if (loadedData.selectedView && ["Linear", "Classic"].includes(loadedData.selectedView)) {
+        if (loadedData.selectedView && ["Linear", "Classic", "Column"].includes(loadedData.selectedView)) {
           setSelectedView(loadedData.selectedView)
         }
       } catch (error) {
@@ -102,8 +92,7 @@ const SaveLoadData: React.FC = () => {
 
   const handleCleanAll = () => {
     if (window.confirm("Are you sure you want to delete all data? This action cannot be undone.")) {
-      setColoredDays(new Map())
-      setCustomTexts(new Map())
+      setDateCells(new Map())
       setSelectedYear(new Date().getFullYear())
       setSelectedColorTexture("red")
       setSelectedView("Linear")
@@ -194,7 +183,6 @@ const SaveLoadData: React.FC = () => {
           Clean All
         </button>
 
-        {/* Hidden file input for loading */}
         <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} style={{ display: "none" }} />
       </div>
 

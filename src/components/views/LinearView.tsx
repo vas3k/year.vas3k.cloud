@@ -1,25 +1,16 @@
 import { addDays, eachDayOfInterval, endOfYear, format, getDay, isSameMonth, startOfYear, subDays } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode, applyColorToDate, getDateKey } from "../../utils/colors"
+import { ColorTextureCode, DateCellData, applyColorToDate, getDateKey } from "../../utils/colors"
 import Day from "../Day"
 
 interface LinearViewProps {
   selectedYear: number
-  coloredDays: Map<string, ColorTextureCode>
-  setColoredDays: (days: Map<string, ColorTextureCode>) => void
+  dateCells: Map<string, DateCellData>
+  setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
-  customTexts: Map<string, string>
-  setCustomTexts: (texts: Map<string, string>) => void
 }
 
-const LinearView: React.FC<LinearViewProps> = ({
-  selectedYear,
-  coloredDays,
-  setColoredDays,
-  selectedColorTexture,
-  customTexts,
-  setCustomTexts,
-}) => {
+const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const year = selectedYear
@@ -32,12 +23,12 @@ const LinearView: React.FC<LinearViewProps> = ({
 
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
-    applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
+    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
   }
 
   const handleMouseEnter = (date: Date) => {
     if (isDragging) {
-      applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
+      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
     }
   }
 
@@ -60,15 +51,27 @@ const LinearView: React.FC<LinearViewProps> = ({
 
   const handleCustomTextChange = (date: Date, text: string) => {
     const dateKey = getDateKey(date)
-    const newCustomTexts = new Map(customTexts)
+    const newDateCells = new Map(dateCells)
+    const currentCell = dateCells.get(dateKey) || {}
 
     if (text.trim()) {
-      newCustomTexts.set(dateKey, text)
+      newDateCells.set(dateKey, {
+        ...currentCell,
+        customText: text,
+      })
     } else {
-      newCustomTexts.delete(dateKey)
+      const updatedCell = { ...currentCell }
+      delete updatedCell.customText
+
+      // If the cell has no other properties, remove it entirely
+      if (Object.keys(updatedCell).length === 0) {
+        newDateCells.delete(dateKey)
+      } else {
+        newDateCells.set(dateKey, updatedCell)
+      }
     }
 
-    setCustomTexts(newCustomTexts)
+    setDateCells(newDateCells)
   }
 
   const getAdjustedDayOfWeek = (date: Date): number => {
@@ -289,9 +292,10 @@ const LinearView: React.FC<LinearViewProps> = ({
                 {/* Day cells */}
                 {week.map((day, dayIndex) => {
                   const dateKey = getDateKey(day)
-                  const isColored = coloredDays.has(dateKey)
-                  const dayColorTexture = coloredDays.get(dateKey)
-                  const customText = customTexts.get(dateKey) || ""
+                  const dateCellData = dateCells.get(dateKey) || {}
+                  const isColored = !!(dateCellData.color || dateCellData.texture)
+                  const dayColorTexture = dateCellData.color || dateCellData.texture
+                  const customText = dateCellData.customText || ""
 
                   return (
                     <td

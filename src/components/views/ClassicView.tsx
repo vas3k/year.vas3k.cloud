@@ -1,37 +1,28 @@
 import { eachDayOfInterval, endOfMonth, format, getDay, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode, applyColorToDate, getDateKey } from "../../utils/colors"
+import { ColorTextureCode, DateCellData, applyColorToDate, getDateKey } from "../../utils/colors"
 import Day from "../Day"
 
 interface ClassicViewProps {
   selectedYear: number
-  coloredDays: Map<string, ColorTextureCode>
-  setColoredDays: (days: Map<string, ColorTextureCode>) => void
+  dateCells: Map<string, DateCellData>
+  setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
-  customTexts: Map<string, string>
-  setCustomTexts: (texts: Map<string, string>) => void
 }
 
-const ClassicView: React.FC<ClassicViewProps> = ({
-  selectedYear,
-  coloredDays,
-  setColoredDays,
-  selectedColorTexture,
-  customTexts,
-  setCustomTexts,
-}) => {
+const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
-    applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
+    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
   }
 
   const handleMouseEnter = (date: Date) => {
     if (isDragging) {
-      applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
+      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
     }
   }
 
@@ -54,15 +45,27 @@ const ClassicView: React.FC<ClassicViewProps> = ({
 
   const handleCustomTextChange = (date: Date, text: string) => {
     const dateKey = getDateKey(date)
-    const newCustomTexts = new Map(customTexts)
+    const newDateCells = new Map(dateCells)
+    const currentCell = dateCells.get(dateKey) || {}
 
     if (text.trim()) {
-      newCustomTexts.set(dateKey, text)
+      newDateCells.set(dateKey, {
+        ...currentCell,
+        customText: text,
+      })
     } else {
-      newCustomTexts.delete(dateKey)
+      const updatedCell = { ...currentCell }
+      delete updatedCell.customText
+
+      // If the cell has no other properties, remove it entirely
+      if (Object.keys(updatedCell).length === 0) {
+        newDateCells.delete(dateKey)
+      } else {
+        newDateCells.set(dateKey, updatedCell)
+      }
     }
 
-    setCustomTexts(newCustomTexts)
+    setDateCells(newDateCells)
   }
 
   const getAdjustedDayOfWeek = (date: Date): number => {
@@ -207,9 +210,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({
                         }
 
                         const dateKey = getDateKey(day)
-                        const dayColorTexture = coloredDays.get(dateKey)
-                        const isColored = dayColorTexture !== undefined
-                        const customText = customTexts.get(dateKey) || ""
+                        const dayData = dateCells.get(dateKey) || {}
+                        const isColored = !!(dayData.color || dayData.texture)
+                        const dayColorTexture = dayData.color || dayData.texture
+                        const customText = dayData.customText || ""
 
                         return (
                           <td

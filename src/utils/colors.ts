@@ -9,6 +9,12 @@ export interface ColorTextureSelection {
   textureCode?: TextureCode
 }
 
+export interface DateCellData {
+  color?: ColorCode
+  texture?: TextureCode
+  customText?: string
+}
+
 export const COLORS: Record<ColorCode, string> = {
   red: "oklch(0.7003 0.2051 17.87)",
   orange: "oklch(0.847 0.2 60)",
@@ -49,18 +55,51 @@ export const getDateKey = (date: Date): string => {
 
 export const applyColorToDate = (
   date: Date,
-  coloredDays: Map<string, ColorTextureCode>,
+  dateCells: Map<string, DateCellData>,
   selectedColorTexture: ColorTextureCode,
-  setColoredDays: (days: Map<string, ColorTextureCode>) => void
+  setDateCells: (dateCells: Map<string, DateCellData>) => void
 ) => {
   const dateKey = getDateKey(date)
-  const newColoredDays = new Map(coloredDays)
-  const currentSelection = coloredDays.get(dateKey)
+  const newDateCells = new Map(dateCells)
+  const currentCell = dateCells.get(dateKey)
 
-  if (currentSelection && currentSelection === selectedColorTexture) {
-    newColoredDays.delete(dateKey)
+  // Check if the current selection matches what we're trying to apply
+  const isColor = Object.keys(COLORS).includes(selectedColorTexture)
+  const isTexture = Object.keys(TEXTURES).includes(selectedColorTexture)
+
+  const currentMatchesSelection =
+    (isColor && currentCell?.color === selectedColorTexture) ||
+    (isTexture && currentCell?.texture === selectedColorTexture)
+
+  if (currentMatchesSelection) {
+    // Remove the color/texture if it's already applied
+    const updatedCell = { ...currentCell }
+    if (isColor) {
+      delete updatedCell.color
+    } else if (isTexture) {
+      delete updatedCell.texture
+    }
+
+    // If the cell has no other properties, remove it entirely
+    if (Object.keys(updatedCell).length === 0) {
+      newDateCells.delete(dateKey)
+    } else {
+      newDateCells.set(dateKey, updatedCell)
+    }
   } else {
-    newColoredDays.set(dateKey, selectedColorTexture)
+    // Apply the new color/texture
+    const updatedCell = { ...currentCell }
+    if (isColor) {
+      updatedCell.color = selectedColorTexture as ColorCode
+      // Remove any existing texture when applying a color
+      delete updatedCell.texture
+    } else if (isTexture) {
+      updatedCell.texture = selectedColorTexture as TextureCode
+      // Remove any existing color when applying a texture
+      delete updatedCell.color
+    }
+    newDateCells.set(dateKey, updatedCell)
   }
-  setColoredDays(newColoredDays)
+
+  setDateCells(newDateCells)
 }

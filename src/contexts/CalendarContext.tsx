@@ -1,17 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
-import { ColorTextureCode } from "../utils/colors"
+import { ColorTextureCode, DateCellData } from "../utils/colors"
 
 type CalendarView = "Linear" | "Classic" | "Column"
 
 interface CalendarContextType {
   selectedYear: number
   setSelectedYear: (year: number) => void
-  coloredDays: Map<string, ColorTextureCode>
-  setColoredDays: (coloredDays: Map<string, ColorTextureCode>) => void
+  dateCells: Map<string, DateCellData>
+  setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
   setSelectedColorTexture: (colorTexture: ColorTextureCode) => void
-  customTexts: Map<string, string>
-  setCustomTexts: (customTexts: Map<string, string>) => void
   selectedView: CalendarView
   setSelectedView: (view: CalendarView) => void
 }
@@ -26,30 +24,25 @@ const STORAGE_KEY = "calendar_data"
 
 interface StoredData {
   selectedYear: number
-  coloredDays: Record<string, ColorTextureCode>
+  dateCells: Record<string, DateCellData>
   selectedColorTexture: ColorTextureCode
-  customTexts: Record<string, string>
   selectedView: CalendarView
 }
 
 export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) => {
   const currentYear = new Date().getFullYear()
 
-  // Initialize state with default values
   const [selectedYear, setSelectedYearState] = useState(currentYear)
-  const [coloredDays, setColoredDaysState] = useState<Map<string, ColorTextureCode>>(new Map())
+  const [dateCells, setDateCellsState] = useState<Map<string, DateCellData>>(new Map())
   const [selectedColorTexture, setSelectedColorTextureState] = useState<ColorTextureCode>("red")
-  const [customTexts, setCustomTextsState] = useState<Map<string, string>>(new Map())
   const [selectedView, setSelectedViewState] = useState<CalendarView>("Linear")
 
-  // Load data from localStorage on component mount
   useEffect(() => {
     try {
       const storedData = localStorage.getItem(STORAGE_KEY)
       if (storedData) {
         const parsedData: StoredData = JSON.parse(storedData)
 
-        // Load selected year (validate it's reasonable)
         if (
           parsedData.selectedYear &&
           parsedData.selectedYear >= currentYear - 1 &&
@@ -58,24 +51,15 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
           setSelectedYearState(parsedData.selectedYear)
         }
 
-        // Load colored days
-        if (parsedData.coloredDays) {
-          const coloredDaysMap = new Map(Object.entries(parsedData.coloredDays))
-          setColoredDaysState(coloredDaysMap)
+        if (parsedData.dateCells) {
+          const dateCellsMap = new Map(Object.entries(parsedData.dateCells))
+          setDateCellsState(dateCellsMap)
         }
 
-        // Load selected color texture
         if (parsedData.selectedColorTexture) {
           setSelectedColorTextureState(parsedData.selectedColorTexture)
         }
 
-        // Load custom texts
-        if (parsedData.customTexts) {
-          const customTextsMap = new Map(Object.entries(parsedData.customTexts))
-          setCustomTextsState(customTextsMap)
-        }
-
-        // Load selected view
         if (parsedData.selectedView && ["Linear", "Classic", "Column"].includes(parsedData.selectedView)) {
           setSelectedViewState(parsedData.selectedView)
         }
@@ -85,7 +69,6 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     }
   }, [currentYear])
 
-  // Save data to localStorage whenever state changes
   const saveToLocalStorage = (data: StoredData) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
@@ -94,25 +77,22 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     }
   }
 
-  // Wrapper functions that save to localStorage
   const setSelectedYear = (year: number) => {
     setSelectedYearState(year)
     saveToLocalStorage({
       selectedYear: year,
-      coloredDays: Object.fromEntries(coloredDays),
+      dateCells: Object.fromEntries(dateCells),
       selectedColorTexture,
-      customTexts: Object.fromEntries(customTexts),
       selectedView,
     })
   }
 
-  const setColoredDays = (newColoredDays: Map<string, ColorTextureCode>) => {
-    setColoredDaysState(newColoredDays)
+  const setDateCells = (newDateCells: Map<string, DateCellData>) => {
+    setDateCellsState(newDateCells)
     saveToLocalStorage({
       selectedYear,
-      coloredDays: Object.fromEntries(newColoredDays),
+      dateCells: Object.fromEntries(newDateCells),
       selectedColorTexture,
-      customTexts: Object.fromEntries(customTexts),
       selectedView,
     })
   }
@@ -121,20 +101,8 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     setSelectedColorTextureState(colorTexture)
     saveToLocalStorage({
       selectedYear,
-      coloredDays: Object.fromEntries(coloredDays),
+      dateCells: Object.fromEntries(dateCells),
       selectedColorTexture: colorTexture,
-      customTexts: Object.fromEntries(customTexts),
-      selectedView,
-    })
-  }
-
-  const setCustomTexts = (newCustomTexts: Map<string, string>) => {
-    setCustomTextsState(newCustomTexts)
-    saveToLocalStorage({
-      selectedYear,
-      coloredDays: Object.fromEntries(coloredDays),
-      selectedColorTexture,
-      customTexts: Object.fromEntries(newCustomTexts),
       selectedView,
     })
   }
@@ -143,9 +111,8 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     setSelectedViewState(view)
     saveToLocalStorage({
       selectedYear,
-      coloredDays: Object.fromEntries(coloredDays),
+      dateCells: Object.fromEntries(dateCells),
       selectedColorTexture,
-      customTexts: Object.fromEntries(customTexts),
       selectedView: view,
     })
   }
@@ -153,12 +120,10 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
   const value: CalendarContextType = {
     selectedYear,
     setSelectedYear,
-    coloredDays,
-    setColoredDays,
+    dateCells,
+    setDateCells,
     selectedColorTexture,
     setSelectedColorTexture,
-    customTexts,
-    setCustomTexts,
     selectedView,
     setSelectedView,
   }
