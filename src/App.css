@@ -14,33 +14,6 @@
   cursor: pointer;
 }
 
-/* Texture styles */
-.texture-diagonal-stripes {
-  background-image: repeating-linear-gradient(
-    45deg,
-    #ccc,
-    #ccc 5px,
-    transparent 5px,
-    transparent 10px
-  );
-}
-
-.texture-polka-dots {
-  background-image: radial-gradient(
-    circle at 1.5px 1.5px,
-    #ccc 1.5px,
-    transparent 1.5px
-  );
-  background-size: 6px 6px;
-}
-
-.texture-square-net {
-  background-image: 
-    linear-gradient(#ccc 1px, transparent 1px),
-    linear-gradient(90deg, #ccc 1px, transparent 1px);
-  background-size: 6px 6px;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
   .App {

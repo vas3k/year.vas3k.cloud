@@ -16,38 +16,8 @@ const ColorPicker: React.FC = () => {
       // It's a texture
       return {
         backgroundColor: "#e0e0e0", // Light gray base for textures
-        backgroundImage: getTextureBackgroundImage(code as keyof typeof TEXTURES),
-      }
-    }
-  }
-
-  // Helper function to get texture background image
-  const getTextureBackgroundImage = (textureCode: keyof typeof TEXTURES): string => {
-    switch (textureCode) {
-      case "diagonal-stripes":
-        return "repeating-linear-gradient(45deg, #ccc, #ccc 5px, transparent 5px, transparent 10px)"
-      case "polka-dots":
-        return "radial-gradient(circle at 1.5px 1.5px, #ccc 1.5px, transparent 1.5px)"
-      case "square-net":
-        return "linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px)"
-      default:
-        return ""
-    }
-  }
-
-  // Helper function to get background size for textures
-  const getBackgroundSize = (code: ColorTextureCode): string => {
-    if (code in COLORS) {
-      return "auto"
-    } else {
-      switch (code) {
-        case "diagonal-stripes":
-          return "auto"
-        case "polka-dots":
-        case "square-net":
-          return "6px 6px"
-        default:
-          return "auto"
+        backgroundImage: TEXTURES[code as keyof typeof TEXTURES],
+        backgroundSize: "6px 6px",
       }
     }
   }
@@ -80,7 +50,6 @@ const ColorPicker: React.FC = () => {
               transition: "all 0.2s ease",
               outline: "none",
               boxShadow: isSelected ? "0 2px 8px rgba(0,0,0,0.3)" : "0 1px 4px rgba(0,0,0,0.1)",
-              backgroundSize: getBackgroundSize(code),
               ...backgroundStyle,
             }}
             title={code.replace(/-/g, " ")}

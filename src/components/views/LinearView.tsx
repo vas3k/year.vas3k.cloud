@@ -1,15 +1,4 @@
-import {
-  addDays,
-  eachDayOfInterval,
-  endOfYear,
-  format,
-  getDay,
-  isFirstDayOfMonth,
-  isLastDayOfMonth,
-  isSameMonth,
-  startOfYear,
-  subDays,
-} from "date-fns"
+import { addDays, eachDayOfInterval, endOfYear, format, getDay, isSameMonth, startOfYear, subDays } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { ColorTextureCode } from "../../types/colors"
 import Day from "../Day"
@@ -273,105 +262,124 @@ const LinearView: React.FC<LinearViewProps> = ({
   }
 
   return (
-    <table
+    <div
       style={{
-        borderCollapse: "collapse",
+        display: "flex",
+        justifyContent: "center",
         width: "100%",
-        border: "2px solid #333",
+        padding: "20px",
       }}
     >
-      <thead>
-        <tr style={{ borderBottom: "2px solid #333" }}>
-          <th
-            style={{
-              width: "120px",
-              padding: "10px",
-              fontWeight: "bold",
-              borderRight: "2px solid #333",
-              backgroundColor: "#f5f5f5",
-              textAlign: "left",
-            }}
-          >
-            &nbsp;
-          </th>
-          {dayNames.map((dayName) => (
+      <table
+        style={{
+          borderCollapse: "collapse",
+          width: "100%",
+          maxWidth: "1600px",
+          border: "2px solid #333",
+        }}
+      >
+        <thead>
+          <tr style={{ borderBottom: "2px solid #333" }}>
             <th
-              key={dayName}
               style={{
+                width: "120px",
                 padding: "10px",
-                textAlign: "center",
                 fontWeight: "bold",
-                borderRight: "1px solid #ccc",
+                borderRight: "2px solid #333",
                 backgroundColor: "#f5f5f5",
+                textAlign: "left",
               }}
             >
-              {dayName}
+              &nbsp;
             </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {weeks.map((week, weekIndex) => {
-          const monthName = shouldShowMonthName(week)
-
-          return (
-            <tr key={weekIndex} style={{ minHeight: "60px" }}>
-              {/* Month name cell */}
-              <td
+            {dayNames.map((dayName) => (
+              <th
+                key={dayName}
                 style={{
-                  width: "120px",
                   padding: "10px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  borderRight: "2px solid #333",
-                  backgroundColor: "#f0f0f0",
                   textAlign: "center",
-                  verticalAlign: "middle",
-                  borderTop: monthName ? "2px solid #333" : "none",
-                  borderBottom: "none",
+                  fontWeight: "bold",
+                  borderRight: "1px solid #ccc",
+                  backgroundColor: "#f5f5f5",
                 }}
               >
-                {monthName}
-              </td>
+                {dayName}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {weeks.map((week, weekIndex) => {
+            const monthName = shouldShowMonthName(week)
 
-              {/* Day cells */}
-              {week.map((day, dayIndex) => {
-                const dateKey = getDateKey(day)
-                const isColored = coloredDays.has(dateKey)
-                const dayColorTexture = coloredDays.get(dateKey)
-                const customText = customTexts.get(dateKey) || ""
+            return (
+              <tr key={weekIndex} style={{ minHeight: "60px" }}>
+                {/* Month name cell */}
+                <td
+                  style={{
+                    width: "120px",
+                    padding: "10px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    borderRight: "2px solid #333",
+                    backgroundColor: "#f0f0f0",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                    borderTop: monthName ? "2px solid #333" : "none",
+                    borderBottom: "none",
+                  }}
+                >
+                  {monthName}
+                </td>
 
-                return (
-                  <td
-                    key={dayIndex}
-                    style={{
-                      padding: "0",
-                      textAlign: "center",
-                      verticalAlign: "middle",
-                      ...getDayBorderStyles(day, dayIndex, weekIndex),
-                    }}
-                  >
-                    <Day
+                {/* Day cells */}
+                {week.map((day, dayIndex) => {
+                  const dateKey = getDateKey(day)
+                  const isColored = coloredDays.has(dateKey)
+                  const dayColorTexture = coloredDays.get(dateKey)
+                  const customText = customTexts.get(dateKey) || ""
+
+                  return (
+                    <td
                       key={dayIndex}
-                      date={day}
-                      isMonthStart={isFirstDayOfMonth(day)}
-                      isMonthEnd={isLastDayOfMonth(day)}
-                      isColored={isColored}
-                      colorTextureCode={dayColorTexture}
-                      onClick={() => handleDayClick(day)}
-                      onMouseDown={() => handleMouseDown(day)}
-                      onMouseEnter={() => handleMouseEnter(day)}
-                      onCustomTextChange={(text) => handleCustomTextChange(day, text)}
-                      customText={customText}
-                    />
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+                      style={{
+                        padding: "0",
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        height: "50px",
+                        ...getDayBorderStyles(day, dayIndex, weekIndex),
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Day
+                          key={dayIndex}
+                          date={day}
+                          isColored={isColored}
+                          colorTextureCode={dayColorTexture}
+                          onClick={() => handleDayClick(day)}
+                          onMouseDown={() => handleMouseDown(day)}
+                          onMouseEnter={() => handleMouseEnter(day)}
+                          onCustomTextChange={(text) => handleCustomTextChange(day, text)}
+                          customText={customText}
+                        />
+                      </div>
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

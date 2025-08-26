@@ -1,12 +1,4 @@
-import {
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  getDay,
-  isFirstDayOfMonth,
-  isLastDayOfMonth,
-  startOfMonth,
-} from "date-fns"
+import { eachDayOfInterval, endOfMonth, format, getDay, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { ColorTextureCode } from "../../types/colors"
 import Day from "../Day"
@@ -150,10 +142,13 @@ const ClassicView: React.FC<ClassicViewProps> = ({
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        display: "flex",
+        flexWrap: "wrap",
         gap: "20px",
         padding: "20px",
+        justifyContent: "center",
+        maxWidth: "100%",
+        overflow: "hidden",
       }}
     >
       {months.map((month) => {
@@ -168,6 +163,9 @@ const ClassicView: React.FC<ClassicViewProps> = ({
               borderRadius: "8px",
               overflow: "hidden",
               backgroundColor: "#fff",
+              minWidth: "320px",
+              maxWidth: "400px",
+              flex: "0 1 auto",
             }}
           >
             {/* Month header */}
@@ -185,37 +183,71 @@ const ClassicView: React.FC<ClassicViewProps> = ({
             </div>
 
             {/* Calendar grid */}
-            <table
+            <div
               style={{
-                borderCollapse: "collapse",
                 width: "100%",
+                overflow: "hidden",
               }}
             >
-              <thead>
-                <tr>
-                  {dayNames.map((dayName) => (
-                    <th
-                      key={dayName}
-                      style={{
-                        padding: "8px 4px",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        fontSize: "12px",
-                        borderBottom: "1px solid #ccc",
-                        backgroundColor: "#f9f9f9",
-                      }}
-                    >
-                      {dayName}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {weeks.map((week, weekIndex) => (
-                  <tr key={weekIndex}>
-                    {week.map((day, dayIndex) => {
-                      // Only process if day is not null
-                      if (!day) {
+              <table
+                style={{
+                  borderCollapse: "collapse",
+                  width: "100%",
+                  tableLayout: "fixed",
+                }}
+              >
+                <thead>
+                  <tr>
+                    {dayNames.map((dayName) => (
+                      <th
+                        key={dayName}
+                        style={{
+                          padding: "4px 2px",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          fontSize: "11px",
+                          borderBottom: "1px solid #ccc",
+                          backgroundColor: "#f9f9f9",
+                          width: "14.28%", // 100% / 7 days
+                          maxWidth: "14.28%",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {dayName}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {weeks.map((week, weekIndex) => (
+                    <tr key={weekIndex}>
+                      {week.map((day, dayIndex) => {
+                        // Only process if day is not null
+                        if (!day) {
+                          return (
+                            <td
+                              key={dayIndex}
+                              style={{
+                                padding: "0",
+                                textAlign: "center",
+                                verticalAlign: "middle",
+                                border: "1px solid #eee",
+                                width: "14.28%",
+                                maxWidth: "14.28%",
+                                height: "40px",
+                                overflow: "visible",
+                              }}
+                            />
+                          )
+                        }
+
+                        const dateKey = getDateKey(day)
+                        const dayColorTexture = coloredDays.get(dateKey)
+                        const isColored = dayColorTexture !== undefined
+                        const customText = customTexts.get(dateKey) || ""
+
                         return (
                           <td
                             key={dayIndex}
@@ -224,49 +256,30 @@ const ClassicView: React.FC<ClassicViewProps> = ({
                               textAlign: "center",
                               verticalAlign: "middle",
                               border: "1px solid #eee",
-                              minHeight: "32px",
-                              minWidth: "32px",
+                              width: "14.28%",
+                              maxWidth: "14.28%",
+                              height: "40px",
+                              overflow: "visible",
                             }}
-                          />
+                          >
+                            <Day
+                              date={day}
+                              isColored={isColored}
+                              colorTextureCode={dayColorTexture}
+                              onClick={() => handleDayClick(day)}
+                              onMouseDown={() => handleMouseDown(day)}
+                              onMouseEnter={() => handleMouseEnter(day)}
+                              onCustomTextChange={(text) => handleCustomTextChange(day, text)}
+                              customText={customText}
+                            />
+                          </td>
                         )
-                      }
-
-                      const dateKey = getDateKey(day)
-                      const dayColorTexture = coloredDays.get(dateKey)
-                      const isColored = dayColorTexture !== undefined
-                      const customText = customTexts.get(dateKey) || ""
-
-                      return (
-                        <td
-                          key={dayIndex}
-                          style={{
-                            padding: "0",
-                            textAlign: "center",
-                            verticalAlign: "middle",
-                            border: "1px solid #eee",
-                            minHeight: "32px",
-                            minWidth: "32px",
-                          }}
-                        >
-                          <Day
-                            date={day}
-                            isMonthStart={isFirstDayOfMonth(day)}
-                            isMonthEnd={isLastDayOfMonth(day)}
-                            isColored={isColored}
-                            colorTextureCode={dayColorTexture}
-                            onClick={() => handleDayClick(day)}
-                            onMouseDown={() => handleMouseDown(day)}
-                            onMouseEnter={() => handleMouseEnter(day)}
-                            onCustomTextChange={(text) => handleCustomTextChange(day, text)}
-                            customText={customText}
-                          />
-                        </td>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )
       })}

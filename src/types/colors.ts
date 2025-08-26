@@ -20,10 +20,18 @@ export const COLORS: Record<ColorCode, string> = {
   pink: "oklch(0.847 0.2 330)",
 }
 
+export const WEEKEND_COLOR = "oklch(0.98 0.02 60)"
+
 export const TEXTURES: Record<TextureCode, string> = {
-  "diagonal-stripes": "texture-diagonal-stripes",
-  "polka-dots": "texture-polka-dots",
-  "square-net": "texture-square-net",
+  "diagonal-stripes": "repeating-linear-gradient(45deg, #ccc, #ccc 5px, transparent 5px, transparent 10px)",
+  "polka-dots": "radial-gradient(circle at 1.5px 1.5px, #ccc 1.5px, transparent 1.5px)",
+  "square-net": "linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px)",
+}
+
+export const TEXTURE_BACKGROUND_SIZES: Record<TextureCode, string> = {
+  "diagonal-stripes": "auto",
+  "polka-dots": "6px 6px",
+  "square-net": "6px 6px",
 }
 
 export const ALL_COLOR_TEXTURE_CODES: ColorTextureCode[] = [

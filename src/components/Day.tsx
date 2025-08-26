@@ -1,11 +1,10 @@
+import { isToday, isWeekend } from "date-fns"
 import React, { useState } from "react"
-import { COLORS, ColorTextureCode, TEXTURES } from "../types/colors"
+import { COLORS, ColorTextureCode, TEXTURES, TEXTURE_BACKGROUND_SIZES, WEEKEND_COLOR } from "../types/colors"
 import CustomText from "./CustomText"
 
 interface DayProps {
   date: Date
-  isMonthStart?: boolean
-  isMonthEnd?: boolean
   isColored?: boolean
   colorTextureCode?: ColorTextureCode
   onClick?: () => void
@@ -17,8 +16,6 @@ interface DayProps {
 
 const Day: React.FC<DayProps> = ({
   date,
-  isMonthStart = false,
-  isMonthEnd = false,
   isColored = false,
   colorTextureCode,
   onClick,
@@ -31,26 +28,12 @@ const Day: React.FC<DayProps> = ({
   const [isHovered, setIsHovered] = useState(false)
   const [isCreatingCustomText, setIsCreatingCustomText] = useState(false)
 
-  // Get CSS classes for the color/texture
-  const getColorTextureClasses = (): string => {
-    if (!colorTextureCode) return ""
-
-    const classes: string[] = []
-
-    if (colorTextureCode in COLORS) {
-      classes.push(`color-${colorTextureCode}`)
-    }
-
-    if (colorTextureCode in TEXTURES) {
-      classes.push(TEXTURES[colorTextureCode as keyof typeof TEXTURES])
-    }
-
-    return classes.join(" ")
-  }
-
   // Get background color for colors (not textures)
   const getBackgroundColor = (): string => {
     if (!isColored || !colorTextureCode || !(colorTextureCode in COLORS)) {
+      if (isWeekend(date)) {
+        return WEEKEND_COLOR
+      }
       return isHovered ? "#f0f0f0" : "#fff"
     }
 
@@ -80,11 +63,27 @@ const Day: React.FC<DayProps> = ({
   // Get base background color for custom text (without hover effects)
   const getBaseBackgroundColor = (): string => {
     if (!isColored || !colorTextureCode || !(colorTextureCode in COLORS)) {
+      if (isWeekend(date)) {
+        return WEEKEND_COLOR
+      }
       return "#fff"
     }
 
     const color = COLORS[colorTextureCode as keyof typeof COLORS]
     return color || "#fff"
+  }
+
+  // Get texture styles if applicable
+  const getTextureStyles = (): React.CSSProperties => {
+    if (!isColored || !colorTextureCode || !(colorTextureCode in TEXTURES)) {
+      return {}
+    }
+
+    return {
+      backgroundColor: "#f5f5f5",
+      backgroundImage: TEXTURES[colorTextureCode as keyof typeof TEXTURES],
+      backgroundSize: TEXTURE_BACKGROUND_SIZES[colorTextureCode as keyof typeof TEXTURE_BACKGROUND_SIZES],
+    }
   }
 
   // Handle day number click to start custom text editing
@@ -119,28 +118,31 @@ const Day: React.FC<DayProps> = ({
 
   return (
     <div
-      className={`day ${getColorTextureClasses()}`}
+      className="day"
       data-colored={isColored ? "true" : "false"}
       onClick={onClick}
       onMouseDown={onMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        padding: "8px",
+        padding: "4px",
         textAlign: "center",
-        minWidth: "40px",
-        minHeight: "40px",
+        width: "100%",
+        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "16px",
+        fontSize: "14px",
         fontWeight: "normal",
         backgroundColor: getBackgroundColor(),
         position: "relative",
         cursor: "pointer",
         transition: "background-color 0.2s ease",
         overflow: "visible",
-        userSelect: "none", // Prevent text selection during drag
+        userSelect: "none",
+        border: isToday(date) ? "2px inset #000" : "none",
+        boxSizing: "border-box",
+        ...getTextureStyles(),
       }}
     >
       {hasCustomText ? (
@@ -148,18 +150,20 @@ const Day: React.FC<DayProps> = ({
           text={customText}
           onTextChange={handleCustomTextChange}
           backgroundColor={getBaseBackgroundColor()}
-          hoverBackgroundColor={isColored ? "#f0f0f0" : "#f0f0f0"}
+          hoverBackgroundColor="#f0f0f0"
         />
       ) : (
         <div
           onClick={handleDayNumberClick}
           style={{
             cursor: onCustomTextChange ? "pointer" : "default",
-            padding: "4px 6px",
-            borderRadius: "4px",
+            padding: "2px 4px",
+            borderRadius: "3px",
             transition: "all 0.2s ease",
             display: "inline-block",
-            pointerEvents: "auto", // Ensure clicks work on the number
+            pointerEvents: "auto",
+            fontSize: "inherit",
+            lineHeight: "1",
           }}
           onMouseEnter={(e) => {
             if (onCustomTextChange) {

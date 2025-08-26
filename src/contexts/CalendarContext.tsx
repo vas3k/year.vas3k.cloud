@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { ColorTextureCode } from "../types/colors"
 
-type CalendarView = "Linear" | "Classic"
+type CalendarView = "Linear" | "Classic" | "Column"
 
 interface CalendarContextType {
   selectedYear: number
@@ -76,7 +76,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
         }
 
         // Load selected view
-        if (parsedData.selectedView && ["Linear", "Classic"].includes(parsedData.selectedView)) {
+        if (parsedData.selectedView && ["Linear", "Classic", "Column"].includes(parsedData.selectedView)) {
           setSelectedViewState(parsedData.selectedView)
         }
       }

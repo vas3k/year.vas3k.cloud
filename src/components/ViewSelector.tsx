@@ -1,6 +1,6 @@
 import React from "react"
 
-export type CalendarView = "Linear" | "Classic"
+export type CalendarView = "Linear" | "Classic" | "Column"
 
 interface ViewSelectorProps {
   selectedView: CalendarView
@@ -8,48 +8,56 @@ interface ViewSelectorProps {
 }
 
 const ViewSelector: React.FC<ViewSelectorProps> = ({ selectedView, onViewChange }) => {
+  const views: CalendarView[] = ["Linear", "Classic", "Column"]
+
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        gap: "12px",
         marginBottom: "20px",
       }}
     >
-      <label
+      <div
         style={{
-          fontSize: "14px",
-          fontWeight: "bold",
-          color: "#333",
-        }}
-      >
-        View:
-      </label>
-      <select
-        value={selectedView}
-        onChange={(e) => onViewChange(e.target.value as CalendarView)}
-        style={{
-          padding: "8px 12px",
-          fontSize: "14px",
+          display: "flex",
           border: "2px solid #ccc",
-          borderRadius: "6px",
-          backgroundColor: "#fff",
-          cursor: "pointer",
-          outline: "none",
-          transition: "border-color 0.2s ease",
-        }}
-        onFocus={(e) => {
-          e.target.style.borderColor = "#007bff"
-        }}
-        onBlur={(e) => {
-          e.target.style.borderColor = "#ccc"
+          borderRadius: "8px",
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
         }}
       >
-        <option value="Linear">Linear</option>
-        <option value="Classic">Classic</option>
-      </select>
+        {views.map((view) => (
+          <button
+            key={view}
+            onClick={() => onViewChange(view)}
+            style={{
+              padding: "10px 20px",
+              fontSize: "14px",
+              fontWeight: "bold",
+              border: "none",
+              backgroundColor: selectedView === view ? "#007bff" : "transparent",
+              color: selectedView === view ? "#fff" : "#333",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              borderRight: view !== "Column" ? "1px solid #ccc" : "none",
+            }}
+            onMouseEnter={(e) => {
+              if (selectedView !== view) {
+                e.currentTarget.style.backgroundColor = "#e0e0e0"
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (selectedView !== view) {
+                e.currentTarget.style.backgroundColor = "transparent"
+              }
+            }}
+          >
+            {view}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
