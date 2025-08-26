@@ -1,4 +1,4 @@
-export type ColorCode = "red" | "yellow" | "green" | "teal" | "blue" | "purple" | "magenta" | "pink"
+export type ColorCode = "red" | "orange" | "green" | "blue" | "yellow" | "purple" | "teal" | "pink"
 
 export type TextureCode = "diagonal-stripes" | "polka-dots" | "square-net"
 
@@ -10,13 +10,13 @@ export interface ColorTextureSelection {
 }
 
 export const COLORS: Record<ColorCode, string> = {
-  red: "oklch(0.847 0.2 0)",
-  yellow: "oklch(0.847 0.2 60)",
-  green: "oklch(0.847 0.2 120)",
-  teal: "oklch(0.847 0.2 180)",
+  red: "oklch(0.7003 0.2051 17.87)",
+  orange: "oklch(0.847 0.2 60)",
+  green: "oklch(0.782 0.1998 151.28)",
   blue: "oklch(0.847 0.2 240)",
+  yellow: "oklch(0.8751 0.1875 97.28)",
   purple: "oklch(0.847 0.2 270)",
-  magenta: "oklch(0.847 0.2 300)",
+  teal: "oklch(0.8205 0.1603 195.75)",
   pink: "oklch(0.847 0.2 330)",
 }
 
@@ -31,12 +31,12 @@ export const TEXTURES: Record<TextureCode, string> = {
 
 export const ALL_COLOR_TEXTURE_CODES: ColorTextureCode[] = [
   "red",
-  "yellow",
+  "orange",
   "green",
-  "teal",
   "blue",
+  "yellow",
   "purple",
-  "magenta",
+  "teal",
   "pink",
   "diagonal-stripes",
   "polka-dots",
