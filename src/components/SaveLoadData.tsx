@@ -120,89 +120,111 @@ const SaveLoadData: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "16px",
-        marginTop: "30px",
-        padding: "20px",
-        borderTop: "1px solid #eee",
-      }}
-    >
-      <button
-        onClick={handleSaveData}
+    <>
+      <div
         style={{
-          padding: "12px 20px",
-          fontSize: "14px",
-          fontWeight: "bold",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-          transition: "background-color 0.2s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#0056b3"
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#007bff"
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "16px",
+          marginTop: "30px",
+          padding: "20px",
+          borderTop: "1px solid #eee",
         }}
       >
-        Save Data...
-      </button>
+        <button
+          onClick={handleSaveData}
+          style={{
+            padding: "12px 20px",
+            fontSize: "14px",
+            fontWeight: "bold",
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#0056b3"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#007bff"
+          }}
+        >
+          Save Data...
+        </button>
 
-      <button
-        onClick={handleLoadData}
+        <button
+          onClick={handleLoadData}
+          style={{
+            padding: "12px 20px",
+            fontSize: "14px",
+            fontWeight: "bold",
+            backgroundColor: "#28a745",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#1e7e34"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#28a745"
+          }}
+        >
+          Load Data
+        </button>
+
+        <button
+          onClick={handleCleanAll}
+          style={{
+            padding: "12px 20px",
+            fontSize: "14px",
+            fontWeight: "bold",
+            backgroundColor: "#dc3545",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#c82333"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#dc3545"
+          }}
+        >
+          Clean All
+        </button>
+
+        {/* Hidden file input for loading */}
+        <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} style={{ display: "none" }} />
+      </div>
+
+      <div
         style={{
-          padding: "12px 20px",
-          fontSize: "14px",
-          fontWeight: "bold",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-          transition: "background-color 0.2s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#1e7e34"
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#28a745"
+          color: "#666",
+          textAlign: "center",
+          maxWidth: "800px",
+          margin: "0 auto",
+          padding: "20px",
         }}
       >
-        Load Data
-      </button>
-
-      <button
-        onClick={handleCleanAll}
-        style={{
-          padding: "12px 20px",
-          fontSize: "14px",
-          fontWeight: "bold",
-          backgroundColor: "#dc3545",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-          transition: "background-color 0.2s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#c82333"
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#dc3545"
-        }}
-      >
-        Clean All
-      </button>
-
-      {/* Hidden file input for loading */}
-      <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} style={{ display: "none" }} />
-    </div>
+        <p style={{ fontSize: "16px" }}>
+          All changes on this page are saved locally in your browser. This page doesn't use any servers and works
+          offline.
+        </p>
+        <p style={{ fontSize: "13px", paddingTop: "20px", paddingBottom: "100px" }}>
+          However, some browsers may occasionally delete your local storage to "save space", so we strongly recommend
+          saving them to your hard drive using the buttons above! (You can also save them to your hard drive manually
+          using the buttons above.)
+        </p>
+      </div>
+    </>
   )
 }
 

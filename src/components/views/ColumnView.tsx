@@ -1,7 +1,6 @@
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode } from "../../types/colors"
-import { applyColorToDate, getDateKey } from "../../utils/colors"
+import { ColorTextureCode, applyColorToDate, getDateKey } from "../../utils/colors"
 import Day from "../Day"
 
 interface ColumnViewProps {
@@ -36,15 +35,21 @@ const ColumnView: React.FC<ColumnViewProps> = ({
     }
   }
 
-  // Global mouse up handler
+  // Global mouse up and touch end handler
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false)
     }
 
+    const handleGlobalTouchEnd = () => {
+      setIsDragging(false)
+    }
+
     document.addEventListener("mouseup", handleGlobalMouseUp)
+    document.addEventListener("touchend", handleGlobalTouchEnd)
     return () => {
       document.removeEventListener("mouseup", handleGlobalMouseUp)
+      document.removeEventListener("touchend", handleGlobalTouchEnd)
     }
   }, [])
 
@@ -86,16 +91,16 @@ const ColumnView: React.FC<ColumnViewProps> = ({
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
         width: "100%",
+        overflowX: "auto", // Enable horizontal scrolling on mobile
+        WebkitOverflowScrolling: "touch", // Smooth scrolling on iOS
       }}
     >
       <table
         style={{
           borderCollapse: "collapse",
           width: "100%",
-          maxWidth: "1600px",
+          minWidth: "800px", // Ensure minimum width for readability
           border: "2px solid #333",
         }}
       >

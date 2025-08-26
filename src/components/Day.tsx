@@ -1,6 +1,6 @@
 import { isToday, isWeekend } from "date-fns"
 import React, { useState } from "react"
-import { COLORS, ColorTextureCode, TEXTURES, TEXTURE_BACKGROUND_SIZES, WEEKEND_COLOR } from "../types/colors"
+import { COLORS, ColorTextureCode, TEXTURES, WEEKEND_COLOR } from "../utils/colors"
 import CustomText from "./CustomText"
 
 interface DayProps {
@@ -81,10 +81,11 @@ const Day: React.FC<DayProps> = ({
       return {}
     }
 
+    const textureCode = colorTextureCode as keyof typeof TEXTURES
     return {
       backgroundColor: "#f5f5f5",
-      backgroundImage: TEXTURES[colorTextureCode as keyof typeof TEXTURES],
-      backgroundSize: TEXTURE_BACKGROUND_SIZES[colorTextureCode as keyof typeof TEXTURE_BACKGROUND_SIZES],
+      backgroundImage: TEXTURES[textureCode],
+      backgroundSize: "6px 6px",
     }
   }
 
@@ -126,6 +127,8 @@ const Day: React.FC<DayProps> = ({
       onMouseDown={onMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={onMouseDown}
+      onTouchMove={onMouseEnter}
       style={{
         padding: "4px",
         textAlign: "center",
@@ -144,6 +147,7 @@ const Day: React.FC<DayProps> = ({
         userSelect: "none",
         border: isToday(date) ? "2px inset #000" : "none",
         boxSizing: "border-box",
+        touchAction: "none", // Prevent default touch behaviors
         ...getTextureStyles(),
       }}
     >

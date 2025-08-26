@@ -9,7 +9,7 @@ const CalendarTitle: React.FC = () => {
 
   return (
     <h1 style={{ textAlign: "center", marginBottom: "30px" }}>
-      Your{" "}
+      My plans for{" "}
       <select
         value={selectedYear}
         onChange={(e) => setSelectedYear(parseInt(e.target.value))}
@@ -19,7 +19,7 @@ const CalendarTitle: React.FC = () => {
           border: "none",
           background: "transparent",
           cursor: "pointer",
-          padding: "5px",
+          padding: "0",
           borderRadius: "4px",
         }}
       >

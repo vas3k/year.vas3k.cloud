@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
-import { ColorTextureCode } from "../types/colors"
+import { ColorTextureCode } from "../utils/colors"
 
 type CalendarView = "Linear" | "Classic" | "Column"
 

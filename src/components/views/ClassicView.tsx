@@ -1,7 +1,6 @@
 import { eachDayOfInterval, endOfMonth, format, getDay, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode } from "../../types/colors"
-import { applyColorToDate, getDateKey } from "../../utils/colors"
+import { ColorTextureCode, applyColorToDate, getDateKey } from "../../utils/colors"
 import Day from "../Day"
 
 interface ClassicViewProps {
@@ -38,15 +37,21 @@ const ClassicView: React.FC<ClassicViewProps> = ({
     }
   }
 
-  // Global mouse up handler
+  // Global mouse up and touch end handler
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false)
     }
 
+    const handleGlobalTouchEnd = () => {
+      setIsDragging(false)
+    }
+
     document.addEventListener("mouseup", handleGlobalMouseUp)
+    document.addEventListener("touchend", handleGlobalTouchEnd)
     return () => {
       document.removeEventListener("mouseup", handleGlobalMouseUp)
+      document.removeEventListener("touchend", handleGlobalTouchEnd)
     }
   }, [])
 
@@ -115,6 +120,7 @@ const ClassicView: React.FC<ClassicViewProps> = ({
         justifyContent: "center",
         maxWidth: "100%",
         overflow: "hidden",
+        padding: "10px", // Add padding for mobile
       }}
     >
       {months.map((month) => {
@@ -129,9 +135,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({
               borderRadius: "8px",
               overflow: "hidden",
               backgroundColor: "#fff",
-              minWidth: "320px",
+              minWidth: "280px", // Smaller minimum width for mobile
               maxWidth: "400px",
               flex: "0 1 auto",
+              width: "100%", // Full width on mobile
             }}
           >
             {/* Month header */}
