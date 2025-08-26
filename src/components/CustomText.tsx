@@ -19,7 +19,6 @@ const CustomText: React.FC<CustomTextProps> = ({
   const [editText, setEditText] = useState(text)
   const textRef = useRef<HTMLDivElement>(null)
 
-  // Handle text click to start editing
   const handleTextClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
@@ -27,14 +26,12 @@ const CustomText: React.FC<CustomTextProps> = ({
     setEditText(text)
   }
 
-  // Handle text editing
   const handleTextEdit = () => {
     const newText = textRef.current?.textContent || ""
     onTextChange(newText)
     setIsEditing(false)
   }
 
-  // Handle key press in edit mode
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault()
@@ -49,7 +46,6 @@ const CustomText: React.FC<CustomTextProps> = ({
     }
   }
 
-  // Focus the text element when editing starts
   useEffect(() => {
     if (isEditing && textRef.current) {
       textRef.current.focus()
@@ -76,7 +72,6 @@ const CustomText: React.FC<CustomTextProps> = ({
     }
   }, [text, isEditing])
 
-  // Get overflow styles based on direction
   const getOverflowStyles = (): React.CSSProperties => {
     switch (overflowDirection) {
       case "overflow-y":

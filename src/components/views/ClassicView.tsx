@@ -24,20 +24,17 @@ const ClassicView: React.FC<ClassicViewProps> = ({
 
   const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
-  // Handle mouse down to start drag
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
     applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
   }
 
-  // Handle mouse enter during drag
   const handleMouseEnter = (date: Date) => {
     if (isDragging) {
       applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
     }
   }
 
-  // Global mouse up and touch end handler
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false)
@@ -55,7 +52,6 @@ const ClassicView: React.FC<ClassicViewProps> = ({
     }
   }, [])
 
-  // Handle custom text change
   const handleCustomTextChange = (date: Date, text: string) => {
     const dateKey = getDateKey(date)
     const newCustomTexts = new Map(customTexts)
@@ -69,13 +65,11 @@ const ClassicView: React.FC<ClassicViewProps> = ({
     setCustomTexts(newCustomTexts)
   }
 
-  // Adjust day of week to start from Monday (0 = Monday, 6 = Sunday)
   const getAdjustedDayOfWeek = (date: Date): number => {
     const day = getDay(date)
     return day === 0 ? 6 : day - 1 // Sunday becomes 6, Monday becomes 0
   }
 
-  // Function to get weeks for a specific month
   const getWeeksForMonth = (month: number): Date[][] => {
     const startDate = startOfMonth(new Date(selectedYear, month, 1))
     const endDate = endOfMonth(new Date(selectedYear, month, 1))
@@ -95,7 +89,6 @@ const ClassicView: React.FC<ClassicViewProps> = ({
       }
     })
 
-    // Add the last incomplete week if it has any days
     if (currentWeek.some((day) => day !== null)) {
       weeks.push([...currentWeek])
     }
@@ -103,12 +96,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({
     return weeks
   }
 
-  // Function to get month name
   const getMonthName = (month: number): string => {
     return format(new Date(selectedYear, month, 1), "MMMM")
   }
 
-  // Generate all months
   const months = Array.from({ length: 12 }, (_, i) => i)
 
   return (
@@ -120,7 +111,7 @@ const ClassicView: React.FC<ClassicViewProps> = ({
         justifyContent: "center",
         maxWidth: "100%",
         overflow: "hidden",
-        padding: "10px", // Add padding for mobile
+        padding: "10px",
       }}
     >
       {months.map((month) => {

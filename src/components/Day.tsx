@@ -30,7 +30,6 @@ const Day: React.FC<DayProps> = ({
   const [isHovered, setIsHovered] = useState(false)
   const [isCreatingCustomText, setIsCreatingCustomText] = useState(false)
 
-  // Get background color for colors (not textures)
   const getBackgroundColor = (): string => {
     if (!isColored || !colorTextureCode || !(colorTextureCode in COLORS)) {
       if (isWeekend(date)) {
@@ -62,7 +61,6 @@ const Day: React.FC<DayProps> = ({
     return color
   }
 
-  // Get base background color for custom text (without hover effects)
   const getBaseBackgroundColor = (): string => {
     if (!isColored || !colorTextureCode || !(colorTextureCode in COLORS)) {
       if (isWeekend(date)) {
@@ -75,7 +73,6 @@ const Day: React.FC<DayProps> = ({
     return color || "#fff"
   }
 
-  // Get texture styles if applicable
   const getTextureStyles = (): React.CSSProperties => {
     if (!isColored || !colorTextureCode || !(colorTextureCode in TEXTURES)) {
       return {}
@@ -97,7 +94,6 @@ const Day: React.FC<DayProps> = ({
     }
   }
 
-  // Handle custom text change
   const handleCustomTextChange = (text: string) => {
     if (onCustomTextChange) {
       onCustomTextChange(text)

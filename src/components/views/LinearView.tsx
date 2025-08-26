@@ -20,7 +20,6 @@ const LinearView: React.FC<LinearViewProps> = ({
   customTexts,
   setCustomTexts,
 }) => {
-  // Drag state
   const [isDragging, setIsDragging] = useState(false)
 
   const year = selectedYear

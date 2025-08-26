@@ -22,20 +22,17 @@ const ColumnView: React.FC<ColumnViewProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false)
 
-  // Handle mouse down to start drag
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
     applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
   }
 
-  // Handle mouse enter during drag
   const handleMouseEnter = (date: Date) => {
     if (isDragging) {
       applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
     }
   }
 
-  // Global mouse up and touch end handler
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false)
@@ -53,7 +50,6 @@ const ColumnView: React.FC<ColumnViewProps> = ({
     }
   }, [])
 
-  // Handle custom text change
   const handleCustomTextChange = (date: Date, text: string) => {
     const dateKey = getDateKey(date)
     const newCustomTexts = new Map(customTexts)
@@ -67,24 +63,20 @@ const ColumnView: React.FC<ColumnViewProps> = ({
     setCustomTexts(newCustomTexts)
   }
 
-  // Function to get all days for a specific month
   const getDaysForMonth = (month: number): Date[] => {
     const startDate = startOfMonth(new Date(selectedYear, month, 1))
     const endDate = endOfMonth(new Date(selectedYear, month, 1))
     return eachDayOfInterval({ start: startDate, end: endDate })
   }
 
-  // Function to get month name
   const getMonthName = (month: number): string => {
     return format(new Date(selectedYear, month, 1), "MMMM")
   }
 
-  // Get the maximum number of days in any month (for table height)
   const getMaxDaysInYear = (): number => {
     return Math.max(...Array.from({ length: 12 }, (_, i) => getDaysForMonth(i).length))
   }
 
-  // Generate all months
   const months = Array.from({ length: 12 }, (_, i) => i)
   const maxDays = getMaxDaysInYear()
 
@@ -92,8 +84,8 @@ const ColumnView: React.FC<ColumnViewProps> = ({
     <div
       style={{
         width: "100%",
-        overflowX: "auto", // Enable horizontal scrolling on mobile
-        WebkitOverflowScrolling: "touch", // Smooth scrolling on iOS
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
       }}
     >
       <table
