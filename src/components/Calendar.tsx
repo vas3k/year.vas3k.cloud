@@ -14,8 +14,10 @@ const Calendar: React.FC = () => {
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <CalendarTitle />
-      <ColorPicker />
-      <ViewSelector selectedView={selectedView} onViewChange={setSelectedView} />
+      <div className="no-print">
+        <ColorPicker />
+        <ViewSelector selectedView={selectedView} onViewChange={setSelectedView} />
+      </div>
 
       {selectedView === "Linear" ? (
         <LinearView
@@ -40,7 +42,9 @@ const Calendar: React.FC = () => {
         />
       )}
 
-      <SaveLoadData />
+      <div className="no-print">
+        <SaveLoadData />
+      </div>
     </div>
   )
 }

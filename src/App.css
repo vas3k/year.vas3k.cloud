@@ -29,3 +29,342 @@
     user-select: none;
   }
 }
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0.5in;
+    min-width: 1400px;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    color: black !important;
+    font-size: 12pt !important;
+    line-height: 1.2 !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .App {
+    background-color: white !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .App > div {
+    padding: 10px !important;
+    margin: 0 !important;
+    background: white !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* Calendar title */
+  .App > div > div:first-child {
+    text-align: center !important;
+    font-size: 24pt !important;
+    font-weight: bold !important;
+    margin-bottom: 20px !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Classic View - Monthly calendars */
+  .App > div > div:nth-child(4) > div {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+    justify-content: flex-start !important;
+    max-width: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  /* Individual month container */
+  .App > div > div:nth-child(4) > div > div {
+    border: 2px solid #333 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    background-color: white !important;
+    min-width: 280px !important;
+    max-width: 320px !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 15px !important;
+  }
+
+  /* Month header */
+  .App > div > div:nth-child(4) > div > div > div:first-child {
+    background-color: #f5f5f5 !important;
+    padding: 8px !important;
+    text-align: center !important;
+    border-bottom: 2px solid #333 !important;
+    font-weight: bold !important;
+    font-size: 14pt !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Calendar table */
+  .App > div > div:nth-child(4) > div > div > div:last-child {
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .App > div > div:nth-child(4) > div > div > div:last-child > table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  /* Table headers */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > thead > tr > th {
+    padding: 4px 2px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    font-size: 10pt !important;
+    border-bottom: 1px solid #ccc !important;
+    background-color: #f9f9f9 !important;
+    width: 14.28% !important;
+    max-width: 14.28% !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+
+  /* Table cells */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > tbody > tr > td {
+    padding: 0 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    border: 1px solid #eee !important;
+    width: 14.28% !important;
+    max-width: 14.28% !important;
+    height: 35px !important;
+    overflow: visible !important;
+  }
+
+  /* Day cells */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > tbody > tr > td > div {
+    padding: 2px !important;
+    text-align: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 11pt !important;
+    font-weight: normal !important;
+    position: relative !important;
+    cursor: default !important;
+    transition: none !important;
+    overflow: visible !important;
+    user-select: none !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    touch-action: none !important;
+  }
+
+  /* Preserve all colors and backgrounds */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > tbody > tr > td > div[data-colored="true"] {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Today's border */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > tbody > tr > td > div[style*="border"] {
+    border: 2px inset #000 !important;
+  }
+
+  /* Linear View - Grid layout */
+  .App > div > div:nth-child(4) > div[style*="display: grid"] {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 10px !important;
+    padding: 0 !important;
+    max-width: none !important;
+    overflow: visible !important;
+  }
+
+  .App > div > div:nth-child(4) > div[style*="display: grid"] > div {
+    border: 2px solid #333 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    background-color: white !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Linear View - Table layout */
+  .App > div > div:nth-child(4) > div > table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    min-width: 1200px !important;
+    border: 2px solid #333 !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  .App > div > div:nth-child(4) > div > table > thead > tr > th {
+    padding: 8px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    font-size: 10pt !important;
+    border: 1px solid #ccc !important;
+    background-color: #f5f5f5 !important;
+  }
+
+  .App > div > div:nth-child(4) > div > table > tbody > tr > td {
+    padding: 0 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    border: 1px solid #eee !important;
+    height: 40px !important;
+    overflow: visible !important;
+  }
+
+  /* Column View */
+  .App > div > div:nth-child(4) > div[style*="display: flex"][style*="flex-direction: column"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    padding: 0 !important;
+    max-width: none !important;
+    overflow: visible !important;
+  }
+
+  .App > div > div:nth-child(4) > div[style*="display: flex"][style*="flex-direction: column"] > div {
+    border: 2px solid #333 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    background-color: white !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 15px !important;
+  }
+
+  /* Column View - Table layout */
+  .App > div > div:nth-child(4) > div > div > table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    min-width: 1200px !important;
+    border: 2px solid #333 !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  .App > div > div:nth-child(4) > div > div > table > thead > tr > th {
+    padding: 8px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    font-size: 10pt !important;
+    border: 1px solid #ccc !important;
+    background-color: #f5f5f5 !important;
+  }
+
+  .App > div > div:nth-child(4) > div > div > table > tbody > tr > td {
+    padding: 0 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    border: 1px solid #eee !important;
+    height: 40px !important;
+    overflow: visible !important;
+  }
+
+  /* Custom text in day cells */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > tbody > tr > td > div > div,
+  .App > div > div:nth-child(4) > div > table > tbody > tr > td > div > div > div > div {
+    font-size: 9pt !important;
+    line-height: 1.1 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+
+  /* Day numbers */
+  .App > div > div:nth-child(4) > div > div > div:last-child > table > tbody > tr > td > div > div > div,
+  .App > div > div:nth-child(4) > div > table > tbody > tr > td > div > div > div > div > div {
+    cursor: default !important;
+    padding: 1px 2px !important;
+    border-radius: 0 !important;
+    transition: none !important;
+    display: inline-block !important;
+    pointer-events: none !important;
+    font-size: inherit !important;
+    line-height: 1 !important;
+    font-weight: normal !important;
+    background-color: transparent !important;
+  }
+
+  /* Remove all hover effects and transitions */
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  *:hover {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+
+  /* Ensure page breaks work properly */
+  .App > div > div:nth-child(4) > div > div {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  /* Force page breaks if needed */
+  .App > div > div:nth-child(4) > div > div:nth-child(6n) {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  /* Hide any scrollbars */
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Ensure all borders print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force background colors to print */
+  *[style*="background"] {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ensure all day cells preserve their styling */
+  .day {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove any overflow restrictions for print */
+  .App > div > div:nth-child(4) > div {
+    overflow: visible !important;
+    max-width: none !important;
+  }
+}
