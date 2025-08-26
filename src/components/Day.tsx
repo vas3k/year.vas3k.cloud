@@ -82,7 +82,8 @@ const Day: React.FC<DayProps> = ({
     return {
       backgroundColor: "#f5f5f5",
       backgroundImage: TEXTURES[textureCode],
-      backgroundSize: "6px 6px",
+      backgroundSize: "9px 9px",
+      backgroundPosition: "center 2px",
     }
   }
 
