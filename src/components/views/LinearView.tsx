@@ -1,6 +1,6 @@
 import { addDays, eachDayOfInterval, endOfYear, format, getDay, isSameMonth, startOfYear, subDays } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode, DateCellData, applyColorToDate, getDateKey } from "../../utils/colors"
+import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
 import Day from "../Day"
 
 interface LinearViewProps {
@@ -184,8 +184,8 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
   const getDayBorderStyles = (day: Date | null, dayIndex: number, weekIndex: number): React.CSSProperties => {
     if (!day) {
       return {
-        border: "1px solid #ccc",
-        backgroundColor: "#f9f9f9",
+        border: `1px solid ${UI_COLORS.border.secondary}`,
+        backgroundColor: UI_COLORS.background.tertiary,
       }
     }
 
@@ -212,10 +212,22 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
     const isRightEdge = isLastDayOfWeek
 
     return {
-      borderTop: isTopEdge || hasDifferentMonthAbove ? "2px solid #333" : "1px solid #ccc",
-      borderRight: isRightEdge || hasDifferentMonthRight ? "2px solid #333" : "1px solid #ccc",
-      borderBottom: isBottomEdge || hasDifferentMonthBelow ? "2px solid #333" : "1px solid #ccc",
-      borderLeft: isLeftEdge || hasDifferentMonthLeft ? "2px solid #333" : "1px solid #ccc",
+      borderTop:
+        isTopEdge || hasDifferentMonthAbove
+          ? `2px solid ${UI_COLORS.border.primary}`
+          : `1px solid ${UI_COLORS.border.secondary}`,
+      borderRight:
+        isRightEdge || hasDifferentMonthRight
+          ? `2px solid ${UI_COLORS.border.primary}`
+          : `1px solid ${UI_COLORS.border.secondary}`,
+      borderBottom:
+        isBottomEdge || hasDifferentMonthBelow
+          ? `2px solid ${UI_COLORS.border.primary}`
+          : `1px solid ${UI_COLORS.border.secondary}`,
+      borderLeft:
+        isLeftEdge || hasDifferentMonthLeft
+          ? `2px solid ${UI_COLORS.border.primary}`
+          : `1px solid ${UI_COLORS.border.secondary}`,
     }
   }
 
@@ -232,18 +244,18 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
           borderCollapse: "collapse",
           width: "100%",
           minWidth: "1000px",
-          border: "2px solid #333",
+          border: `2px solid ${UI_COLORS.border.primary}`,
         }}
       >
         <thead>
-          <tr style={{ borderBottom: "2px solid #333" }}>
+          <tr style={{ borderBottom: `2px solid ${UI_COLORS.border.primary}` }}>
             <th
               style={{
                 width: "120px",
                 padding: "10px",
                 fontWeight: "bold",
-                borderRight: "2px solid #333",
-                backgroundColor: "#f5f5f5",
+                borderRight: `2px solid ${UI_COLORS.border.primary}`,
+                backgroundColor: UI_COLORS.background.secondary,
                 textAlign: "left",
               }}
             >
@@ -256,8 +268,8 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
                   padding: "10px",
                   textAlign: "center",
                   fontWeight: "bold",
-                  borderRight: "1px solid #ccc",
-                  backgroundColor: "#f5f5f5",
+                  borderRight: `1px solid ${UI_COLORS.border.secondary}`,
+                  backgroundColor: UI_COLORS.background.secondary,
                 }}
               >
                 {dayName}
@@ -278,11 +290,11 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
                     padding: "10px",
                     fontSize: "16px",
                     fontWeight: "bold",
-                    borderRight: "2px solid #333",
-                    backgroundColor: "#f0f0f0",
+                    borderRight: `2px solid ${UI_COLORS.border.primary}`,
+                    backgroundColor: UI_COLORS.background.quaternary,
                     textAlign: "center",
                     verticalAlign: "middle",
-                    borderTop: monthName ? "2px solid #333" : "none",
+                    borderTop: monthName ? `2px solid ${UI_COLORS.border.primary}` : "none",
                     borderBottom: "none",
                   }}
                 >

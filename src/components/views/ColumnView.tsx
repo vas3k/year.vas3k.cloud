@@ -1,6 +1,6 @@
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode, DateCellData, applyColorToDate, getDateKey } from "../../utils/colors"
+import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
 import Day from "../Day"
 
 interface ColumnViewProps {
@@ -96,11 +96,11 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
           borderCollapse: "collapse",
           width: "100%",
           minWidth: "800px",
-          border: "2px solid #333",
+          border: `2px solid ${UI_COLORS.border.primary}`,
         }}
       >
         <thead>
-          <tr style={{ borderBottom: "2px solid #333" }}>
+          <tr style={{ borderBottom: `2px solid ${UI_COLORS.border.primary}` }}>
             {months.map((month) => (
               <th
                 key={month}
@@ -109,8 +109,8 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                   textAlign: "center",
                   fontWeight: "bold",
                   fontSize: "16px",
-                  borderRight: "1px solid #ccc",
-                  backgroundColor: "#f5f5f5",
+                  borderRight: `1px solid ${UI_COLORS.border.secondary}`,
+                  backgroundColor: UI_COLORS.background.secondary,
                   width: `${100 / 12}%`, // Equal width for all columns
                 }}
               >
@@ -134,9 +134,9 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                         padding: "0",
                         textAlign: "center",
                         verticalAlign: "middle",
-                        border: "1px solid #eee",
+                        border: `1px solid ${UI_COLORS.border.tertiary}`,
                         height: "40px",
-                        backgroundColor: "#f9f9f9",
+                        backgroundColor: UI_COLORS.background.tertiary,
                       }}
                     />
                   )
@@ -155,7 +155,7 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                       padding: "0",
                       textAlign: "center",
                       verticalAlign: "middle",
-                      border: "1px solid #eee",
+                      border: `1px solid ${UI_COLORS.border.tertiary}`,
                       height: "40px",
                     }}
                   >

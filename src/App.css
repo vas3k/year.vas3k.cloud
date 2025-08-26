@@ -13,7 +13,6 @@
   cursor: pointer;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .day {
     min-height: 40px;

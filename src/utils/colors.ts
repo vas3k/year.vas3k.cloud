@@ -28,6 +28,44 @@ export const COLORS: Record<ColorCode, string> = {
 
 export const WEEKEND_COLOR = "oklch(0.9779 0.0074 199.59)"
 
+export const UI_COLORS = {
+  background: {
+    primary: "#fff",
+    secondary: "#f5f5f5",
+    tertiary: "#f9f9f9",
+    quaternary: "#f0f0f0",
+    hover: "#e0e0e0",
+  },
+
+  border: {
+    primary: "#333",
+    secondary: "#ccc",
+    tertiary: "#eee",
+    inset: "#000",
+  },
+
+  text: {
+    primary: "#333",
+    secondary: "#666",
+    white: "#fff",
+  },
+
+  button: {
+    primary: {
+      normal: "#007bff",
+      hover: "#0056b3",
+    },
+    success: {
+      normal: "#28a745",
+      hover: "#1e7e34",
+    },
+    danger: {
+      normal: "#dc3545",
+      hover: "#c82333",
+    },
+  },
+} as const
+
 export const TEXTURES: Record<TextureCode, string> = {
   "diagonal-stripes":
     "url(\"data:image/svg+xml,%3Csvg width='6' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='diagonal' patternUnits='userSpaceOnUse' width='6' height='6'%3E%3Cpath d='M 0 0 L 6 6' stroke='%23ccc' stroke-width='1' fill='none'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23diagonal)'/%3E%3C/svg%3E\")",

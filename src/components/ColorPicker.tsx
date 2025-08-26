@@ -1,6 +1,6 @@
 import React from "react"
 import { useCalendar } from "../contexts/CalendarContext"
-import { ALL_COLOR_TEXTURE_CODES, COLORS, ColorTextureCode, TEXTURES } from "../utils/colors"
+import { ALL_COLOR_TEXTURE_CODES, COLORS, ColorTextureCode, TEXTURES, UI_COLORS } from "../utils/colors"
 
 const ColorPicker: React.FC = () => {
   const { selectedColorTexture, setSelectedColorTexture } = useCalendar()
@@ -15,7 +15,7 @@ const ColorPicker: React.FC = () => {
       // It's a texture
       const textureCode = code as keyof typeof TEXTURES
       return {
-        backgroundColor: "#e0e0e0",
+        backgroundColor: UI_COLORS.background.hover,
         backgroundImage: TEXTURES[textureCode],
         backgroundSize: "6px 6px",
       }
@@ -45,7 +45,7 @@ const ColorPicker: React.FC = () => {
               width: "32px",
               height: "32px",
               borderRadius: "50%",
-              border: isSelected ? "3px solid #333" : "2px solid #ccc",
+              border: isSelected ? `3px solid ${UI_COLORS.border.primary}` : `2px solid ${UI_COLORS.border.secondary}`,
               cursor: "pointer",
               transition: "all 0.2s ease",
               outline: "none",

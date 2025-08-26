@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { UI_COLORS } from "../utils/colors"
 
 interface CustomTextProps {
   text: string
@@ -134,13 +135,13 @@ const CustomText: React.FC<CustomTextProps> = ({
       style={{
         fontSize: "18px",
         fontWeight: "bold",
-        color: "#333",
+        color: UI_COLORS.text.primary,
         backgroundColor: backgroundColor,
         padding: "3px",
         borderRadius: "2px",
         cursor: isEditing ? "text" : "pointer",
         outline: "none",
-        border: isEditing ? "1px solid #007bff" : "none",
+        border: isEditing ? `1px solid ${UI_COLORS.button.primary.normal}` : "none",
         boxShadow: isEditing ? "0 0 5px rgba(0,123,255,0.3)" : "none",
         minHeight: "20px",
         ...getOverflowStyles(),

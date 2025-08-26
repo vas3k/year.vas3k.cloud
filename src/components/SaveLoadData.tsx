@@ -1,5 +1,6 @@
 import React, { useRef } from "react"
 import { useCalendar } from "../contexts/CalendarContext"
+import { UI_COLORS } from "../utils/colors"
 
 const SaveLoadData: React.FC = () => {
   const {
@@ -133,7 +134,7 @@ const SaveLoadData: React.FC = () => {
           gap: "16px",
           marginTop: "30px",
           padding: "20px",
-          borderTop: "1px solid #eee",
+          borderTop: `1px solid ${UI_COLORS.border.tertiary}`,
         }}
       >
         <button
@@ -142,7 +143,7 @@ const SaveLoadData: React.FC = () => {
             padding: "12px 20px",
             fontSize: "14px",
             fontWeight: "bold",
-            backgroundColor: "#007bff",
+            backgroundColor: UI_COLORS.button.primary.normal,
             color: "white",
             border: "none",
             borderRadius: "6px",
@@ -151,10 +152,10 @@ const SaveLoadData: React.FC = () => {
             touchAction: "auto",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#0056b3"
+            e.currentTarget.style.backgroundColor = UI_COLORS.button.primary.hover
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#007bff"
+            e.currentTarget.style.backgroundColor = UI_COLORS.button.primary.normal
           }}
         >
           Save Data...
@@ -166,7 +167,7 @@ const SaveLoadData: React.FC = () => {
             padding: "12px 20px",
             fontSize: "14px",
             fontWeight: "bold",
-            backgroundColor: "#28a745",
+            backgroundColor: UI_COLORS.button.success.normal,
             color: "white",
             border: "none",
             borderRadius: "6px",
@@ -175,10 +176,10 @@ const SaveLoadData: React.FC = () => {
             touchAction: "auto",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#1e7e34"
+            e.currentTarget.style.backgroundColor = UI_COLORS.button.success.hover
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#28a745"
+            e.currentTarget.style.backgroundColor = UI_COLORS.button.success.normal
           }}
         >
           Load Data
@@ -190,7 +191,7 @@ const SaveLoadData: React.FC = () => {
             padding: "12px 20px",
             fontSize: "14px",
             fontWeight: "bold",
-            backgroundColor: "#dc3545",
+            backgroundColor: UI_COLORS.button.danger.normal,
             color: "white",
             border: "none",
             borderRadius: "6px",
@@ -199,10 +200,10 @@ const SaveLoadData: React.FC = () => {
             touchAction: "auto",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#c82333"
+            e.currentTarget.style.backgroundColor = UI_COLORS.button.danger.hover
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#dc3545"
+            e.currentTarget.style.backgroundColor = UI_COLORS.button.danger.normal
           }}
         >
           Clean All
@@ -213,7 +214,7 @@ const SaveLoadData: React.FC = () => {
 
       <div
         style={{
-          color: "#666",
+          color: UI_COLORS.text.secondary,
           textAlign: "center",
           maxWidth: "800px",
           margin: "0 auto",

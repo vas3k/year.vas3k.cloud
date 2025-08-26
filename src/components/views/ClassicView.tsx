@@ -1,6 +1,6 @@
 import { eachDayOfInterval, endOfMonth, format, getDay, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { ColorTextureCode, DateCellData, applyColorToDate, getDateKey } from "../../utils/colors"
+import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
 import Day from "../Day"
 
 interface ClassicViewProps {
@@ -125,10 +125,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
           <div
             key={month}
             style={{
-              border: "2px solid #333",
+              border: `2px solid ${UI_COLORS.border.primary}`,
               borderRadius: "8px",
               overflow: "hidden",
-              backgroundColor: "#fff",
+              backgroundColor: UI_COLORS.background.primary,
               minWidth: "280px",
               maxWidth: "400px",
               flex: "0 1 auto",
@@ -138,10 +138,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
             {/* Month header */}
             <div
               style={{
-                backgroundColor: "#f5f5f5",
+                backgroundColor: UI_COLORS.background.secondary,
                 padding: "12px",
                 textAlign: "center",
-                borderBottom: "2px solid #333",
+                borderBottom: `2px solid ${UI_COLORS.border.primary}`,
                 fontWeight: "bold",
                 fontSize: "18px",
               }}
@@ -173,8 +173,8 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
                           textAlign: "center",
                           fontWeight: "bold",
                           fontSize: "11px",
-                          borderBottom: "1px solid #ccc",
-                          backgroundColor: "#f9f9f9",
+                          borderBottom: `1px solid ${UI_COLORS.border.secondary}`,
+                          backgroundColor: UI_COLORS.background.tertiary,
                           width: "14.28%", // 100% / 7 days
                           maxWidth: "14.28%",
                           overflow: "hidden",
@@ -199,7 +199,7 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
                                 padding: "0",
                                 textAlign: "center",
                                 verticalAlign: "middle",
-                                border: "1px solid #eee",
+                                border: `1px solid ${UI_COLORS.border.tertiary}`,
                                 width: "14.28%",
                                 maxWidth: "14.28%",
                                 height: "40px",
@@ -222,7 +222,7 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
                               padding: "0",
                               textAlign: "center",
                               verticalAlign: "middle",
-                              border: "1px solid #eee",
+                              border: `1px solid ${UI_COLORS.border.tertiary}`,
                               width: "14.28%",
                               maxWidth: "14.28%",
                               height: "40px",

@@ -1,6 +1,6 @@
 import { isToday, isWeekend } from "date-fns"
 import React, { useState } from "react"
-import { COLORS, ColorTextureCode, TEXTURES, WEEKEND_COLOR } from "../utils/colors"
+import { COLORS, ColorTextureCode, TEXTURES, UI_COLORS, WEEKEND_COLOR } from "../utils/colors"
 import CustomText from "./CustomText"
 
 interface DayProps {
@@ -35,11 +35,11 @@ const Day: React.FC<DayProps> = ({
       if (isWeekend(date)) {
         return WEEKEND_COLOR
       }
-      return isHovered ? "#f0f0f0" : "#fff"
+      return isHovered ? UI_COLORS.background.quaternary : UI_COLORS.background.primary
     }
 
     const color = COLORS[colorTextureCode as keyof typeof COLORS]
-    if (!color) return "#fff"
+    if (!color) return UI_COLORS.background.primary
 
     // Apply hover effect for colors
     if (isHovered) {
@@ -66,11 +66,11 @@ const Day: React.FC<DayProps> = ({
       if (isWeekend(date)) {
         return WEEKEND_COLOR
       }
-      return "#fff"
+      return UI_COLORS.background.primary
     }
 
     const color = COLORS[colorTextureCode as keyof typeof COLORS]
-    return color || "#fff"
+    return color || UI_COLORS.background.primary
   }
 
   const getTextureStyles = (): React.CSSProperties => {
@@ -80,7 +80,7 @@ const Day: React.FC<DayProps> = ({
 
     const textureCode = colorTextureCode as keyof typeof TEXTURES
     return {
-      backgroundColor: "#f5f5f5",
+      backgroundColor: UI_COLORS.background.secondary,
       backgroundImage: TEXTURES[textureCode],
       backgroundSize: "9px 9px",
       backgroundPosition: "center 2px",
@@ -163,7 +163,7 @@ const Day: React.FC<DayProps> = ({
         transition: "background-color 0.2s ease",
         overflow: "visible",
         userSelect: "none",
-        border: isToday(date) ? "2px inset #000" : "none",
+        border: isToday(date) ? `2px inset ${UI_COLORS.border.inset}` : "none",
         boxSizing: "border-box",
         touchAction: "auto",
         ...getTextureStyles(),
@@ -174,7 +174,7 @@ const Day: React.FC<DayProps> = ({
           text={customText}
           onTextChange={handleCustomTextChange}
           backgroundColor={getBaseBackgroundColor()}
-          hoverBackgroundColor="#f0f0f0"
+          hoverBackgroundColor={UI_COLORS.background.quaternary}
           overflowDirection={customTextOverflow}
         />
       ) : (

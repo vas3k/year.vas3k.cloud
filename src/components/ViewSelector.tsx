@@ -1,4 +1,5 @@
 import React from "react"
+import { UI_COLORS } from "../utils/colors"
 
 export type CalendarView = "Linear" | "Classic" | "Column"
 
@@ -22,10 +23,10 @@ const ViewSelector: React.FC<ViewSelectorProps> = ({ selectedView, onViewChange 
       <div
         style={{
           display: "flex",
-          border: "2px solid #ccc",
+          border: `2px solid ${UI_COLORS.border.secondary}`,
           borderRadius: "8px",
           overflow: "hidden",
-          backgroundColor: "#f5f5f5",
+          backgroundColor: UI_COLORS.background.secondary,
         }}
       >
         {views.map((view) => (
@@ -37,16 +38,16 @@ const ViewSelector: React.FC<ViewSelectorProps> = ({ selectedView, onViewChange 
               fontSize: "14px",
               fontWeight: "bold",
               border: "none",
-              backgroundColor: selectedView === view ? "#007bff" : "transparent",
-              color: selectedView === view ? "#fff" : "#333",
+              backgroundColor: selectedView === view ? UI_COLORS.button.primary.normal : "transparent",
+              color: selectedView === view ? UI_COLORS.text.white : UI_COLORS.text.primary,
               cursor: "pointer",
               transition: "all 0.2s ease",
-              borderRight: view !== "Column" ? "1px solid #ccc" : "none",
+              borderRight: view !== "Column" ? `1px solid ${UI_COLORS.border.secondary}` : "none",
               touchAction: "auto",
             }}
             onMouseEnter={(e) => {
               if (selectedView !== view) {
-                e.currentTarget.style.backgroundColor = "#e0e0e0"
+                e.currentTarget.style.backgroundColor = UI_COLORS.background.hover
               }
             }}
             onMouseLeave={(e) => {
