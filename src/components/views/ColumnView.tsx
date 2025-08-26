@@ -1,6 +1,7 @@
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { ColorTextureCode } from "../../types/colors"
+import { applyColorToDate, getDateKey } from "../../utils/colors"
 import Day from "../Day"
 
 interface ColumnViewProps {
@@ -21,50 +22,17 @@ const ColumnView: React.FC<ColumnViewProps> = ({
   setCustomTexts,
 }) => {
   const [isDragging, setIsDragging] = useState(false)
-  const [dragStartDate, setDragStartDate] = useState<Date | null>(null)
-
-  // Helper function to create a unique key for a date
-  const getDateKey = (date: Date): string => {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-  }
-
-  // Handle day click - delegate to Day component
-  const handleDayClick = (date: Date) => {
-    const dateKey = getDateKey(date)
-    const newColoredDays = new Map(coloredDays)
-    const currentSelection = coloredDays.get(dateKey)
-
-    // Let the Day component handle the logic
-    if (currentSelection && currentSelection === selectedColorTexture) {
-      // If same selection, remove it
-      newColoredDays.delete(dateKey)
-    } else {
-      // If different or no selection, apply the new one
-      newColoredDays.set(dateKey, selectedColorTexture)
-    }
-
-    setColoredDays(newColoredDays)
-  }
 
   // Handle mouse down to start drag
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
-    setDragStartDate(date)
+    applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
   }
 
   // Handle mouse enter during drag
   const handleMouseEnter = (date: Date) => {
-    if (isDragging && dragStartDate) {
-      const dateKey = getDateKey(date)
-      const newColoredDays = new Map(coloredDays)
-      const currentSelection = coloredDays.get(dateKey)
-
-      if (currentSelection && currentSelection === selectedColorTexture) {
-        newColoredDays.delete(dateKey)
-      } else {
-        newColoredDays.set(dateKey, selectedColorTexture)
-      }
-      setColoredDays(newColoredDays)
+    if (isDragging) {
+      applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
     }
   }
 
@@ -72,7 +40,6 @@ const ColumnView: React.FC<ColumnViewProps> = ({
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false)
-      setDragStartDate(null)
     }
 
     document.addEventListener("mouseup", handleGlobalMouseUp)
@@ -122,7 +89,6 @@ const ColumnView: React.FC<ColumnViewProps> = ({
         display: "flex",
         justifyContent: "center",
         width: "100%",
-        padding: "20px",
       }}
     >
       <table
@@ -196,11 +162,11 @@ const ColumnView: React.FC<ColumnViewProps> = ({
                       date={day}
                       isColored={isColored}
                       colorTextureCode={dayColorTexture}
-                      onClick={() => handleDayClick(day)}
                       onMouseDown={() => handleMouseDown(day)}
                       onMouseEnter={() => handleMouseEnter(day)}
                       onCustomTextChange={(text) => handleCustomTextChange(day, text)}
                       customText={customText}
+                      customTextOverflow="overflow-y"
                     />
                   </td>
                 )

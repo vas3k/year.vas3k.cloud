@@ -12,6 +12,7 @@ interface DayProps {
   onMouseEnter?: () => void
   customText?: string
   onCustomTextChange?: (text: string) => void
+  customTextOverflow?: "overflow-x" | "overflow-y" | "no-overflow"
 }
 
 const Day: React.FC<DayProps> = ({
@@ -23,6 +24,7 @@ const Day: React.FC<DayProps> = ({
   onMouseEnter,
   customText = "",
   onCustomTextChange,
+  customTextOverflow = "overflow-x",
 }) => {
   const dayNumber = date.getDate()
   const [isHovered, setIsHovered] = useState(false)
@@ -151,6 +153,7 @@ const Day: React.FC<DayProps> = ({
           onTextChange={handleCustomTextChange}
           backgroundColor={getBaseBackgroundColor()}
           hoverBackgroundColor="#f0f0f0"
+          overflowDirection={customTextOverflow}
         />
       ) : (
         <div

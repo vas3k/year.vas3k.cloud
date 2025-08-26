@@ -20,7 +20,7 @@ export const COLORS: Record<ColorCode, string> = {
   pink: "oklch(0.847 0.2 330)",
 }
 
-export const WEEKEND_COLOR = "oklch(0.98 0.02 60)"
+export const WEEKEND_COLOR = "oklch(0.9779 0.0074 199.59)"
 
 export const TEXTURES: Record<TextureCode, string> = {
   "diagonal-stripes": "repeating-linear-gradient(45deg, #ccc, #ccc 5px, transparent 5px, transparent 10px)",
