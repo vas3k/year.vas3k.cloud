@@ -136,24 +136,16 @@ const Day: React.FC<DayProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={(e) => {
-        e.preventDefault()
         if (e.target !== e.currentTarget) {
           return
         }
         if (onMouseDown) onMouseDown()
       }}
       onTouchMove={(e) => {
-        e.preventDefault()
         if (e.target !== e.currentTarget) {
           return
         }
         if (onMouseEnter) onMouseEnter()
-      }}
-      onTouchEnd={(e) => {
-        e.preventDefault()
-        if (e.target !== e.currentTarget) {
-          return
-        }
       }}
       style={{
         padding: "4px",
@@ -173,7 +165,7 @@ const Day: React.FC<DayProps> = ({
         userSelect: "none",
         border: isToday(date) ? "2px inset #000" : "none",
         boxSizing: "border-box",
-        touchAction: "manipulation",
+        touchAction: "auto",
         ...getTextureStyles(),
       }}
     >

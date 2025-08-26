@@ -148,6 +148,7 @@ const SaveLoadData: React.FC = () => {
             borderRadius: "6px",
             cursor: "pointer",
             transition: "background-color 0.2s ease",
+            touchAction: "auto",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "#0056b3"
@@ -171,6 +172,7 @@ const SaveLoadData: React.FC = () => {
             borderRadius: "6px",
             cursor: "pointer",
             transition: "background-color 0.2s ease",
+            touchAction: "auto",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "#1e7e34"
@@ -194,6 +196,7 @@ const SaveLoadData: React.FC = () => {
             borderRadius: "6px",
             cursor: "pointer",
             transition: "background-color 0.2s ease",
+            touchAction: "auto",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "#c82333"

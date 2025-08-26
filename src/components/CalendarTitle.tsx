@@ -21,6 +21,7 @@ const CalendarTitle: React.FC = () => {
           cursor: "pointer",
           padding: "0",
           borderRadius: "4px",
+          touchAction: "auto",
         }}
       >
         {yearOptions.map((yearOption) => (

@@ -50,6 +50,7 @@ const ColorPicker: React.FC = () => {
               transition: "all 0.2s ease",
               outline: "none",
               boxShadow: isSelected ? "0 2px 8px rgba(0,0,0,0.3)" : "0 1px 4px rgba(0,0,0,0.1)",
+              touchAction: "auto",
               ...backgroundStyle,
             }}
             title={code.replace(/-/g, " ")}

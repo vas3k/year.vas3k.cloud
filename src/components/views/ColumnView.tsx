@@ -29,23 +29,15 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
       setIsDragging(false)
     }
 
-    const handleGlobalTouchEnd = (e: TouchEvent) => {
-      e.preventDefault()
-      setIsDragging(false)
-    }
-
-    const handleGlobalTouchCancel = (e: TouchEvent) => {
-      e.preventDefault()
+    const handleGlobalTouchEnd = () => {
       setIsDragging(false)
     }
 
     document.addEventListener("mouseup", handleGlobalMouseUp)
-    document.addEventListener("touchend", handleGlobalTouchEnd, { passive: false })
-    document.addEventListener("touchcancel", handleGlobalTouchCancel, { passive: false })
+    document.addEventListener("touchend", handleGlobalTouchEnd)
     return () => {
       document.removeEventListener("mouseup", handleGlobalMouseUp)
       document.removeEventListener("touchend", handleGlobalTouchEnd)
-      document.removeEventListener("touchcancel", handleGlobalTouchCancel)
     }
   }, [])
 

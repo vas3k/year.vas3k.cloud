@@ -42,6 +42,7 @@ const ViewSelector: React.FC<ViewSelectorProps> = ({ selectedView, onViewChange 
               cursor: "pointer",
               transition: "all 0.2s ease",
               borderRight: view !== "Column" ? "1px solid #ccc" : "none",
+              touchAction: "auto",
             }}
             onMouseEnter={(e) => {
               if (selectedView !== view) {
