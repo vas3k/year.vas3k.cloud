@@ -27,6 +27,7 @@ interface StoredData {
   dateCells: Record<string, DateCellData>
   selectedColorTexture: ColorTextureCode
   selectedView: CalendarView
+  version?: string
 }
 
 export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) => {
