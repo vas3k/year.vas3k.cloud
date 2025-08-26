@@ -5,7 +5,6 @@ import { ALL_COLOR_TEXTURE_CODES, COLORS, ColorTextureCode, TEXTURES } from "../
 const ColorPicker: React.FC = () => {
   const { selectedColorTexture, setSelectedColorTexture } = useCalendar()
 
-  // Helper function to get background style for a color/texture
   const getBackgroundStyle = (code: ColorTextureCode): React.CSSProperties => {
     if (code in COLORS) {
       // It's a color
@@ -16,7 +15,7 @@ const ColorPicker: React.FC = () => {
       // It's a texture
       const textureCode = code as keyof typeof TEXTURES
       return {
-        backgroundColor: "#e0e0e0", // Light gray base for textures
+        backgroundColor: "#e0e0e0",
         backgroundImage: TEXTURES[textureCode],
         backgroundSize: "6px 6px",
       }

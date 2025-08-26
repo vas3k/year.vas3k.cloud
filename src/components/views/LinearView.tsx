@@ -31,20 +31,17 @@ const LinearView: React.FC<LinearViewProps> = ({
 
   const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
-  // Handle mouse down to start drag
   const handleMouseDown = (date: Date) => {
     setIsDragging(true)
     applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
   }
 
-  // Handle mouse enter during drag
   const handleMouseEnter = (date: Date) => {
     if (isDragging) {
       applyColorToDate(date, coloredDays, selectedColorTexture, setColoredDays)
     }
   }
 
-  // Global mouse up and touch end handler
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       setIsDragging(false)
@@ -62,7 +59,6 @@ const LinearView: React.FC<LinearViewProps> = ({
     }
   }, [])
 
-  // Handle custom text change
   const handleCustomTextChange = (date: Date, text: string) => {
     const dateKey = getDateKey(date)
     const newCustomTexts = new Map(customTexts)
@@ -76,17 +72,14 @@ const LinearView: React.FC<LinearViewProps> = ({
     setCustomTexts(newCustomTexts)
   }
 
-  // Adjust day of week to start from Monday (0 = Monday, 6 = Sunday)
   const getAdjustedDayOfWeek = (date: Date): number => {
     const day = getDay(date)
     return day === 0 ? 6 : day - 1 // Sunday becomes 6, Monday becomes 0
   }
 
-  // Function to fill empty cells with dates from adjacent years
   const fillEmptyCells = (week: Date[]): Date[] => {
     const filledWeek = [...week]
 
-    // Find the first and last actual dates in the week
     const firstDate = week.find((day) => day !== null)
     const lastDateIndex =
       week.length -
@@ -117,7 +110,6 @@ const LinearView: React.FC<LinearViewProps> = ({
     return filledWeek
   }
 
-  // Group days into weeks and fill empty cells with dates from adjacent years
   const weeks: Date[][] = []
   let currentWeek: Date[] = new Array(7).fill(null)
 
@@ -125,27 +117,22 @@ const LinearView: React.FC<LinearViewProps> = ({
     const dayOfWeek = getAdjustedDayOfWeek(day)
     currentWeek[dayOfWeek] = day
 
-    // If we've filled a complete week (Sunday), start a new week
     if (dayOfWeek === 6) {
-      // Fill empty cells with dates from previous/next years
       const filledWeek = fillEmptyCells(currentWeek)
       weeks.push(filledWeek)
       currentWeek = new Array(7).fill(null)
     }
   })
 
-  // Add the last incomplete week if it has any days
   if (currentWeek.some((day) => day !== null)) {
     const filledWeek = fillEmptyCells(currentWeek)
     weeks.push(filledWeek)
   }
 
-  // Function to get month name for a given date
   const getMonthName = (date: Date): string => {
     return format(date, "MMMM")
   }
 
-  // Function to check if a week should show a month name
   const shouldShowMonthName = (week: Date[]): string | null => {
     // Find the first Monday of the month in this week
     const mondayInWeek = week[0] // Monday is at index 0
@@ -169,7 +156,6 @@ const LinearView: React.FC<LinearViewProps> = ({
     return null
   }
 
-  // Function to get adjacent day for border calculations
   const getAdjacentDay = (
     weekIndex: number,
     dayIndex: number,
@@ -187,14 +173,12 @@ const LinearView: React.FC<LinearViewProps> = ({
     return null
   }
 
-  // Function to check if two days are from different months or years
   const areDifferentMonths = (day1: Date | null, day2: Date | null): boolean => {
     if (!day1 || !day2) return false
     // Check if they're from different years OR different months
     return day1.getFullYear() !== day2.getFullYear() || !isSameMonth(day1, day2)
   }
 
-  // Function to get border styles for a specific day
   const getDayBorderStyles = (day: Date | null, dayIndex: number, weekIndex: number): React.CSSProperties => {
     if (!day) {
       return {
@@ -237,15 +221,15 @@ const LinearView: React.FC<LinearViewProps> = ({
     <div
       style={{
         width: "100%",
-        overflowX: "auto", // Enable horizontal scrolling on mobile
-        WebkitOverflowScrolling: "touch", // Smooth scrolling on iOS
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
       }}
     >
       <table
         style={{
           borderCollapse: "collapse",
           width: "100%",
-          minWidth: "1000px", // Ensure minimum width for readability
+          minWidth: "1000px",
           border: "2px solid #333",
         }}
       >

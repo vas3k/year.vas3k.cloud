@@ -43,7 +43,6 @@ export const ALL_COLOR_TEXTURE_CODES: ColorTextureCode[] = [
   "square-net",
 ]
 
-// Utility functions
 export const getDateKey = (date: Date): string => {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
 }

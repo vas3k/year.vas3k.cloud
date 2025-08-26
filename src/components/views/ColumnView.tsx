@@ -100,7 +100,7 @@ const ColumnView: React.FC<ColumnViewProps> = ({
         style={{
           borderCollapse: "collapse",
           width: "100%",
-          minWidth: "800px", // Ensure minimum width for readability
+          minWidth: "800px",
           border: "2px solid #333",
         }}
       >

@@ -135,10 +135,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({
               borderRadius: "8px",
               overflow: "hidden",
               backgroundColor: "#fff",
-              minWidth: "280px", // Smaller minimum width for mobile
+              minWidth: "280px",
               maxWidth: "400px",
               flex: "0 1 auto",
-              width: "100%", // Full width on mobile
+              width: "100%",
             }}
           >
             {/* Month header */}
@@ -197,7 +197,6 @@ const ClassicView: React.FC<ClassicViewProps> = ({
                   {weeks.map((week, weekIndex) => (
                     <tr key={weekIndex}>
                       {week.map((day, dayIndex) => {
-                        // Only process if day is not null
                         if (!day) {
                           return (
                             <td

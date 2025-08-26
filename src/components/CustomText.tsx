@@ -22,6 +22,7 @@ const CustomText: React.FC<CustomTextProps> = ({
   // Handle text click to start editing
   const handleTextClick = (e: React.MouseEvent) => {
     e.stopPropagation()
+    e.preventDefault()
     setIsEditing(true)
     setEditText(text)
   }
@@ -127,8 +128,14 @@ const CustomText: React.FC<CustomTextProps> = ({
       contentEditable={isEditing}
       suppressContentEditableWarning={true}
       onClick={handleTextClick}
-      onBlur={handleTextEdit}
-      onKeyDown={handleKeyPress}
+      onBlur={(e) => {
+        e.stopPropagation()
+        handleTextEdit()
+      }}
+      onKeyDown={(e) => {
+        e.stopPropagation()
+        handleKeyPress(e)
+      }}
       style={{
         fontSize: "18px",
         fontWeight: "bold",
@@ -144,11 +151,13 @@ const CustomText: React.FC<CustomTextProps> = ({
         ...getOverflowStyles(),
       }}
       onMouseEnter={(e) => {
+        e.stopPropagation()
         if (!isEditing) {
           e.currentTarget.style.backgroundColor = hoverBackgroundColor
         }
       }}
       onMouseLeave={(e) => {
+        e.stopPropagation()
         if (!isEditing) {
           e.currentTarget.style.backgroundColor = backgroundColor
         }

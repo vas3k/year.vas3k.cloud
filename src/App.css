@@ -8,7 +8,6 @@
   transition: background-color 0.2s ease;
 }
 
-/* Only apply grey hover to uncolored days */
 .day:not([data-colored="true"]):hover {
   background-color: #f0f0f0 !important;
   cursor: pointer;

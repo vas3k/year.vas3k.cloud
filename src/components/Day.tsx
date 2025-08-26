@@ -89,7 +89,6 @@ const Day: React.FC<DayProps> = ({
     }
   }
 
-  // Handle day number click to start custom text editing
   const handleDayNumberClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (onCustomTextChange) {
@@ -111,8 +110,10 @@ const Day: React.FC<DayProps> = ({
 
   const hasCustomText = customText.trim().length > 0 || isCreatingCustomText
 
-  // Handle mouse enter for both drag and hover
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget) {
+      return
+    }
     setIsHovered(true)
     if (onMouseEnter) {
       onMouseEnter()
@@ -123,12 +124,32 @@ const Day: React.FC<DayProps> = ({
     <div
       className="day"
       data-colored={isColored ? "true" : "false"}
-      onClick={onClick}
-      onMouseDown={onMouseDown}
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) {
+          return
+        }
+        if (onClick) onClick()
+      }}
+      onMouseDown={(e) => {
+        if (e.target !== e.currentTarget) {
+          return
+        }
+        if (onMouseDown) onMouseDown()
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={onMouseDown}
-      onTouchMove={onMouseEnter}
+      onTouchStart={(e) => {
+        if (e.target !== e.currentTarget) {
+          return
+        }
+        if (onMouseDown) onMouseDown()
+      }}
+      onTouchMove={(e) => {
+        if (e.target !== e.currentTarget) {
+          return
+        }
+        if (onMouseEnter) onMouseEnter()
+      }}
       style={{
         padding: "4px",
         textAlign: "center",
@@ -147,7 +168,7 @@ const Day: React.FC<DayProps> = ({
         userSelect: "none",
         border: isToday(date) ? "2px inset #000" : "none",
         boxSizing: "border-box",
-        touchAction: "none", // Prevent default touch behaviors
+        touchAction: "none",
         ...getTextureStyles(),
       }}
     >

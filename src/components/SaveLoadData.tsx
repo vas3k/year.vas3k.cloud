@@ -17,7 +17,6 @@ const SaveLoadData: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Save data to file
   const handleSaveData = () => {
     const dataToSave = {
       selectedYear,
@@ -42,14 +41,12 @@ const SaveLoadData: React.FC = () => {
     URL.revokeObjectURL(url)
   }
 
-  // Load data from file
   const handleLoadData = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click()
     }
   }
 
-  // Handle file selection and loading
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -100,21 +97,17 @@ const SaveLoadData: React.FC = () => {
     }
     reader.readAsText(file)
 
-    // Reset the input so the same file can be selected again
     event.target.value = ""
   }
 
-  // Clean all data
   const handleCleanAll = () => {
     if (window.confirm("Are you sure you want to delete all data? This action cannot be undone.")) {
-      // Reset to default values
       setColoredDays(new Map())
       setCustomTexts(new Map())
       setSelectedYear(new Date().getFullYear())
       setSelectedColorTexture("red")
       setSelectedView("Linear")
 
-      // Clear localStorage
       localStorage.removeItem("calendar_data")
     }
   }
