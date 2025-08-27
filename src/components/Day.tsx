@@ -159,7 +159,7 @@ const Day: React.FC<DayProps> = ({
         fontWeight: "normal",
         backgroundColor: getBackgroundColor(),
         position: "relative",
-        cursor: "pointer",
+        cursor: "cell",
         transition: "background-color 0.2s ease",
         overflow: "visible",
         userSelect: "none",
@@ -181,7 +181,7 @@ const Day: React.FC<DayProps> = ({
         <div
           onClick={handleDayNumberClick}
           style={{
-            cursor: onCustomTextChange ? "pointer" : "default",
+            cursor: onCustomTextChange ? "text" : "default",
             padding: "2px 4px",
             borderRadius: "3px",
             transition: "all 0.2s ease",
