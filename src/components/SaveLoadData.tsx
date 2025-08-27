@@ -225,10 +225,12 @@ const SaveLoadData: React.FC = () => {
           All changes on this page are saved locally in your browser. This page doesn't use any servers and works
           offline.
         </p>
-        <p style={{ fontSize: "13px", paddingTop: "20px", paddingBottom: "100px" }}>
+        <p style={{ fontSize: "13px", paddingTop: "20px" }}>
           However, some browsers may occasionally delete your local storage to "save space", so we strongly recommend
-          saving them to your hard drive using the buttons above! (You can also save them to your hard drive manually
-          using the buttons above.)
+          saving them to your hard drive using the buttons above.
+        </p>
+        <p style={{ fontSize: "13px", paddingBottom: "100px" }}>
+          Ideas, bugs and feature requests — <a href="https://github.com/vas3k/year.vas3k.cloud">on GitHub</a>.
         </p>
       </div>
     </>
