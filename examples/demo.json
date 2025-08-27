@@ -73,18 +73,18 @@
     },
     "2024-11-30": {
       "color": "blue",
-      "customText": "New Year vacation in Alps with friends  "
+      "customText": "🥂 New Year vacation in Alps with friends  "
     },
     "2025-0-19": {
       "color": "red"
     },
     "2025-0-18": {
       "color": "red",
-      "customText": "My Birthday Weekend!"
+      "customText": "🎂 My Birthday Weekend!"
     },
     "2025-0-27": {
       "color": "yellow",
-      "customText": "Exams →"
+      "customText": "🧠 Exams →"
     },
     "2025-0-30": {
       "color": "yellow",
@@ -138,14 +138,14 @@
     },
     "2025-1-14": {
       "color": "teal",
-      "customText": "Valentine's day (prepare!)"
+      "customText": "❤️ Valentine's day (prepare!)"
     },
     "2025-1-6": {
       "texture": "diagonal-stripes"
     },
     "2025-2-21": {
       "color": "green",
-      "customText": "AFTER-CRUNCH VACATION"
+      "customText": "🏄‍♂️ AFTER-CRUNCH VACATION"
     },
     "2025-2-22": {
       "color": "green"
@@ -181,7 +181,7 @@
     },
     "2025-3-14": {
       "color": "blue",
-      "customText": "ICELAND TRIP 🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸"
+      "customText": "ICELAND ADVENTURE 🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸🇮🇸"
     },
     "2025-3-15": {
       "color": "blue"
@@ -304,24 +304,21 @@
     },
     "2025-5-9": {
       "color": "green",
-      "customText": "Prepare for the B1 exam"
+      "customText": "🧑‍🎓 Study for the B1 exam"
     },
     "2025-5-16": {
       "color": "red",
-      "customText": "B1 EXAM!"
+      "customText": "🧠 B1 EXAM!"
     },
     "2025-5-17": {
       "color": "orange",
-      "customText": "Celebrate?"
+      "customText": "🍺 Celebrate!"
     },
     "2025-6-26": {
       "color": "green",
-      "customText": "Paris?"
+      "customText": "🇫🇷 Paris?"
     },
     "2025-7-3": {
-      "color": "green"
-    },
-    "2025-7-2": {
       "color": "green"
     },
     "2025-6-27": {
@@ -423,7 +420,7 @@
     },
     "2025-7-11": {
       "color": "purple",
-      "customText": "Nik's birthday"
+      "customText": "🎂 Nik's birthday"
     },
     "2025-7-12": {
       "color": "purple"
@@ -463,7 +460,7 @@
     },
     "2025-7-14": {
       "color": "teal",
-      "customText": "Waken festival?"
+      "customText": "☠️ Waken festival!"
     },
     "2025-7-15": {
       "color": "teal"
@@ -519,10 +516,48 @@
     },
     "2025-10-6": {
       "color": "yellow"
+    },
+    "2025-1-27": {
+      "color": "purple",
+      "customText": "🎂 Mom's birthday"
+    },
+    "2025-7-2": {
+      "color": "green"
+    },
+    "2025-6-21": {
+      "color": "yellow",
+      "customText": "🏢 Summer internship"
+    },
+    "2025-6-22": {
+      "color": "yellow"
+    },
+    "2025-6-30": {
+      "color": "yellow"
+    },
+    "2025-6-31": {
+      "color": "yellow"
+    },
+    "2025-7-1": {
+      "color": "yellow"
+    },
+    "2025-6-25": {
+      "color": "yellow"
+    },
+    "2025-6-24": {
+      "color": "yellow"
+    },
+    "2025-6-23": {
+      "color": "yellow"
+    },
+    "2025-6-28": {
+      "color": "yellow"
+    },
+    "2025-6-29": {
+      "color": "yellow"
     }
   },
   "selectedColorTexture": "yellow",
   "selectedView": "Linear",
-  "exportDate": "2025-08-26T20:19:23.320Z",
+  "exportDate": "2025-08-27T09:41:27.424Z",
   "version": "2.0"
 }
