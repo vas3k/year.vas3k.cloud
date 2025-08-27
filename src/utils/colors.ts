@@ -26,42 +26,42 @@ export const COLORS: Record<ColorCode, string> = {
   pink: "oklch(0.847 0.2 330)",
 }
 
-export const WEEKEND_COLOR = "oklch(0.9779 0.0074 199.59)"
+export const WEEKEND_COLOR = "oklch(0.95 0.015 240)"
 
 export const UI_COLORS = {
   background: {
-    primary: "#fff",
-    secondary: "#f5f5f5",
-    tertiary: "#f9f9f9",
-    quaternary: "#f0f0f0",
-    hover: "#e0e0e0",
+    primary: "oklch(0.995 0.002 240)",
+    secondary: "oklch(0.97 0.005 240)",
+    tertiary: "oklch(0.985 0.003 240)",
+    quaternary: "oklch(0.94 0.008 240)",
+    hover: "oklch(0.93 0.015 240)",
   },
 
   border: {
-    primary: "#333",
-    secondary: "#ccc",
-    tertiary: "#eee",
-    inset: "#000",
+    primary: "oklch(0.25 0.02 240)",
+    secondary: "oklch(0.75 0.01 240)",
+    tertiary: "oklch(0.85 0.005 240)",
+    inset: "oklch(0.15 0.03 240)",
   },
 
   text: {
-    primary: "#333",
-    secondary: "#666",
-    white: "#fff",
+    primary: "oklch(0.25 0.02 240)",
+    secondary: "oklch(0.45 0.015 240)",
+    white: "oklch(0.98 0.005 240)",
   },
 
   button: {
     primary: {
-      normal: "#007bff",
-      hover: "#0056b3",
+      normal: "oklch(0.55 0.18 240)",
+      hover: "oklch(0.45 0.2 240)",
     },
     success: {
-      normal: "#28a745",
-      hover: "#1e7e34",
+      normal: "oklch(0.65 0.15 140)",
+      hover: "oklch(0.55 0.17 140)",
     },
     danger: {
-      normal: "#dc3545",
-      hover: "#c82333",
+      normal: "oklch(0.6 0.2 25)",
+      hover: "oklch(0.5 0.22 25)",
     },
   },
 } as const

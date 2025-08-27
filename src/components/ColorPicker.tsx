@@ -15,7 +15,7 @@ const ColorPicker: React.FC = () => {
       // It's a texture
       const textureCode = code as keyof typeof TEXTURES
       return {
-        backgroundColor: UI_COLORS.background.hover,
+        backgroundColor: UI_COLORS.background.secondary,
         backgroundImage: TEXTURES[textureCode],
         backgroundSize: "6px 6px",
       }
