@@ -107,16 +107,6 @@ const Day: React.FC<DayProps> = ({
 
   const hasCustomText = customText.trim().length > 0 || isCreatingCustomText
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    if (e.target !== e.currentTarget) {
-      return
-    }
-    setIsHovered(true)
-    if (onMouseEnter) {
-      onMouseEnter()
-    }
-  }
-
   return (
     <div
       className="day"
@@ -127,26 +117,20 @@ const Day: React.FC<DayProps> = ({
         }
         if (onClick) onClick()
       }}
-      onMouseDown={(e) => {
+      onPointerDown={(e) => {
         if (e.target !== e.currentTarget) {
           return
         }
         if (onMouseDown) onMouseDown()
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={(e) => {
+      onPointerEnter={(e) => {
         if (e.target !== e.currentTarget) {
           return
         }
-        if (onMouseDown) onMouseDown()
-      }}
-      onTouchMove={(e) => {
-        if (e.target !== e.currentTarget) {
-          return
-        }
+        setIsHovered(true)
         if (onMouseEnter) onMouseEnter()
       }}
+      onPointerLeave={() => setIsHovered(false)}
       style={{
         padding: "4px",
         textAlign: "center",
@@ -165,7 +149,7 @@ const Day: React.FC<DayProps> = ({
         userSelect: "none",
         border: isToday(date) ? `2px inset ${UI_COLORS.border.inset}` : "none",
         boxSizing: "border-box",
-        touchAction: "auto",
+        touchAction: "none",
         ...getTextureStyles(),
       }}
     >
