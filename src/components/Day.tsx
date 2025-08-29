@@ -149,7 +149,7 @@ const Day: React.FC<DayProps> = ({
         userSelect: "none",
         border: isToday(date) ? `2px inset ${UI_COLORS.border.inset}` : "none",
         boxSizing: "border-box",
-        touchAction: "none",
+        touchAction: "auto",
         ...getTextureStyles(),
       }}
     >
