@@ -1,0 +1,6 @@
+services:
+  year-vas3k-cloud:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
