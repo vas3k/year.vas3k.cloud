@@ -28,3 +28,19 @@ npm run dev
 Then open <http://localhost:3000/>. Voilá!
 
 For production deployments use `npm run build`
+
+## Run in docker-compose
+
+```yaml
+# docker-compose.yml
+---
+
+services:
+  app:
+    build:
+      context: https://github.com/vas3k/year.vas3k.cloud.git
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+```
+
