@@ -107,7 +107,6 @@ const CustomText: React.FC<CustomTextProps> = ({
           top: "50%",
           left: "8px",
           transform: "translateY(-50%)",
-          minWidth: "100%",
           zIndex: isEditing ? 10 : 1,
         }
     }
