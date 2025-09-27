@@ -9,7 +9,7 @@ import LinearView from "./views/LinearView"
 import ViewSelector from "./ViewSelector"
 
 const Calendar: React.FC = () => {
-  const { selectedYear, dateCells, setDateCells, selectedColorTexture, selectedView, setSelectedView } = useCalendar()
+  const { monthRange, dateCells, setDateCells, selectedColorTexture, selectedView, setSelectedView } = useCalendar()
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -21,21 +21,21 @@ const Calendar: React.FC = () => {
 
       {selectedView === "Linear" ? (
         <LinearView
-          selectedYear={selectedYear}
+          monthRange={monthRange}
           dateCells={dateCells}
           setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
         />
       ) : selectedView === "Classic" ? (
         <ClassicView
-          selectedYear={selectedYear}
+          monthRange={monthRange}
           dateCells={dateCells}
           setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
         />
       ) : (
         <ColumnView
-          selectedYear={selectedYear}
+          monthRange={monthRange}
           dateCells={dateCells}
           setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}

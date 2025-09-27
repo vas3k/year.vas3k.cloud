@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { ColorTextureCode, DateCellData } from "../utils/colors"
+import { createDefaultMonthRange, ensureValidRange, MonthRange, isValidMonthPointer } from "../utils/monthRange"
 
 type CalendarView = "Linear" | "Classic" | "Column"
 
 interface CalendarContextType {
-  selectedYear: number
-  setSelectedYear: (year: number) => void
+  monthRange: MonthRange
+  setMonthRange: (range: MonthRange) => void
   dateCells: Map<string, DateCellData>
   setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
@@ -21,9 +22,11 @@ interface CalendarProviderProps {
 }
 
 const STORAGE_KEY = "calendar_data"
+const STORAGE_VERSION = "3.0"
 
 interface StoredData {
-  selectedYear: number
+  monthRange: MonthRange
+  selectedYear?: number
   dateCells: Record<string, DateCellData>
   selectedColorTexture: ColorTextureCode
   selectedView: CalendarView
@@ -33,7 +36,7 @@ interface StoredData {
 export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) => {
   const currentYear = new Date().getFullYear()
 
-  const [selectedYear, setSelectedYearState] = useState(currentYear)
+  const [monthRange, setMonthRangeState] = useState<MonthRange>(createDefaultMonthRange(currentYear))
   const [dateCells, setDateCellsState] = useState<Map<string, DateCellData>>(new Map())
   const [selectedColorTexture, setSelectedColorTextureState] = useState<ColorTextureCode>("red")
   const [selectedView, setSelectedViewState] = useState<CalendarView>("Linear")
@@ -44,12 +47,17 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
       if (storedData) {
         const parsedData: StoredData = JSON.parse(storedData)
 
-        if (
+        if (parsedData.monthRange) {
+          const { start, end } = parsedData.monthRange
+          if (start && end && isValidMonthPointer(start) && isValidMonthPointer(end)) {
+            setMonthRangeState(ensureValidRange(parsedData.monthRange))
+          }
+        } else if (
           parsedData.selectedYear &&
           parsedData.selectedYear >= currentYear - 1 &&
           parsedData.selectedYear <= currentYear + 5
         ) {
-          setSelectedYearState(parsedData.selectedYear)
+          setMonthRangeState(createDefaultMonthRange(parsedData.selectedYear))
         }
 
         if (parsedData.dateCells) {
@@ -70,57 +78,49 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     }
   }, [currentYear])
 
-  const saveToLocalStorage = (data: StoredData) => {
+  const saveToLocalStorage = (overrides: Partial<StoredData> = {}) => {
+    const dataToSave: StoredData = {
+      monthRange,
+      dateCells: Object.fromEntries(dateCells),
+      selectedColorTexture,
+      selectedView,
+      version: STORAGE_VERSION,
+      ...overrides,
+    }
+
+    dataToSave.version = STORAGE_VERSION
+
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave))
     } catch (error) {
       console.error("Error saving calendar data to localStorage:", error)
     }
   }
 
-  const setSelectedYear = (year: number) => {
-    setSelectedYearState(year)
-    saveToLocalStorage({
-      selectedYear: year,
-      dateCells: Object.fromEntries(dateCells),
-      selectedColorTexture,
-      selectedView,
-    })
+  const setMonthRange = (range: MonthRange) => {
+    const validRange = ensureValidRange(range)
+    setMonthRangeState(validRange)
+    saveToLocalStorage({ monthRange: validRange })
   }
 
   const setDateCells = (newDateCells: Map<string, DateCellData>) => {
     setDateCellsState(newDateCells)
-    saveToLocalStorage({
-      selectedYear,
-      dateCells: Object.fromEntries(newDateCells),
-      selectedColorTexture,
-      selectedView,
-    })
+    saveToLocalStorage({ dateCells: Object.fromEntries(newDateCells) })
   }
 
   const setSelectedColorTexture = (colorTexture: ColorTextureCode) => {
     setSelectedColorTextureState(colorTexture)
-    saveToLocalStorage({
-      selectedYear,
-      dateCells: Object.fromEntries(dateCells),
-      selectedColorTexture: colorTexture,
-      selectedView,
-    })
+    saveToLocalStorage({ selectedColorTexture: colorTexture })
   }
 
   const setSelectedView = (view: CalendarView) => {
     setSelectedViewState(view)
-    saveToLocalStorage({
-      selectedYear,
-      dateCells: Object.fromEntries(dateCells),
-      selectedColorTexture,
-      selectedView: view,
-    })
+    saveToLocalStorage({ selectedView: view })
   }
 
   const value: CalendarContextType = {
-    selectedYear,
-    setSelectedYear,
+    monthRange,
+    setMonthRange,
     dateCells,
     setDateCells,
     selectedColorTexture,

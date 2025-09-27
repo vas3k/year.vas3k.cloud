@@ -1,21 +1,20 @@
-import { addDays, eachDayOfInterval, endOfYear, format, getDay, isSameMonth, startOfYear, subDays } from "date-fns"
+import { addDays, eachDayOfInterval, format, getDay, isSameMonth, subDays } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
+import { getRangeInterval, MonthRange } from "../../utils/monthRange"
 import Day from "../Day"
 
 interface LinearViewProps {
-  selectedYear: number
+  monthRange: MonthRange
   dateCells: Map<string, DateCellData>
   setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
 }
 
-const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
+const LinearView: React.FC<LinearViewProps> = ({ monthRange, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
-  const year = selectedYear
-  const startDate = startOfYear(new Date(year, 0, 1))
-  const endDate = endOfYear(new Date(year, 11, 31))
+  const { start: startDate, end: endDate } = getRangeInterval(monthRange)
 
   const allDays = eachDayOfInterval({ start: startDate, end: endDate })
 
@@ -132,7 +131,16 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
   }
 
   const getMonthName = (date: Date): string => {
-    return format(date, "MMMM")
+    const monthLabel = format(date, "MMMM")
+    const isStartMonth =
+      date.getFullYear() === monthRange.start.year && date.getMonth() === monthRange.start.month
+    const isJanuary = date.getMonth() === 0
+
+    if (isStartMonth || isJanuary) {
+      return `${monthLabel} ${date.getFullYear()}`
+    }
+
+    return monthLabel
   }
 
   const shouldShowMonthName = (week: Date[]): string | null => {
