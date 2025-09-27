@@ -1,16 +1,17 @@
 import { eachDayOfInterval, endOfMonth, format, getDay, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
+import { enumerateMonths, MonthPointer, MonthRange, monthPointerToDate } from "../../utils/monthRange"
 import Day from "../Day"
 
 interface ClassicViewProps {
-  selectedYear: number
+  monthRange: MonthRange
   dateCells: Map<string, DateCellData>
   setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
 }
 
-const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
+const ClassicView: React.FC<ClassicViewProps> = ({ monthRange, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -73,9 +74,10 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
     return day === 0 ? 6 : day - 1 // Sunday becomes 6, Monday becomes 0
   }
 
-  const getWeeksForMonth = (month: number): Date[][] => {
-    const startDate = startOfMonth(new Date(selectedYear, month, 1))
-    const endDate = endOfMonth(new Date(selectedYear, month, 1))
+  const getWeeksForMonth = (monthPointer: MonthPointer): Date[][] => {
+    const baseDate = monthPointerToDate(monthPointer)
+    const startDate = startOfMonth(baseDate)
+    const endDate = endOfMonth(baseDate)
 
     const allDays = eachDayOfInterval({ start: startDate, end: endDate })
     const weeks: Date[][] = []
@@ -99,11 +101,11 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
     return weeks
   }
 
-  const getMonthName = (month: number): string => {
-    return format(new Date(selectedYear, month, 1), "MMMM")
+  const getMonthName = (monthPointer: MonthPointer): string => {
+    return format(monthPointerToDate(monthPointer), "MMMM yyyy")
   }
 
-  const months = Array.from({ length: 12 }, (_, i) => i)
+  const months = enumerateMonths(monthRange)
 
   return (
     <div
@@ -123,7 +125,7 @@ const ClassicView: React.FC<ClassicViewProps> = ({ selectedYear, dateCells, setD
 
         return (
           <div
-            key={month}
+            key={`${month.year}-${month.month}`}
             style={{
               border: `2px solid ${UI_COLORS.border.primary}`,
               borderRadius: "8px",

@@ -1,4 +1,14 @@
 {
+  "monthRange": {
+    "start": {
+      "year": 2025,
+      "month": 0
+    },
+    "end": {
+      "year": 2025,
+      "month": 11
+    }
+  },
   "selectedYear": 2025,
   "dateCells": {
     "2024-11-31": {
@@ -559,5 +569,5 @@
   "selectedColorTexture": "yellow",
   "selectedView": "Linear",
   "exportDate": "2025-08-27T09:41:27.424Z",
-  "version": "2.0"
+  "version": "3.0"
 }
