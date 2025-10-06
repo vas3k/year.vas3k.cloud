@@ -1,6 +1,7 @@
 import React from "react"
 import { useCalendar } from "../contexts/CalendarContext"
 import CalendarTitle from "./CalendarTitle"
+import CalendarSharingControls from "./CalendarSharingControls"
 import ColorPicker from "./ColorPicker"
 import SaveLoadData from "./SaveLoadData"
 import ClassicView from "./views/ClassicView"
@@ -15,6 +16,7 @@ const Calendar: React.FC = () => {
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <CalendarTitle />
       <div className="no-print">
+        <CalendarSharingControls />
         <ColorPicker />
         <ViewSelector selectedView={selectedView} onViewChange={setSelectedView} />
       </div>
