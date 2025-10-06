@@ -95,28 +95,6 @@ const SaveLoadData: React.FC = () => {
           setSelectedView(loadedData.selectedView)
         }
 
-        const mergedDateCells = loadedData.dateCells
-          ? (() => {
-              const newDateCells = new Map(dateCells)
-              Object.entries(loadedData.dateCells).forEach(([dateKey, cellData]) => {
-                const existing = newDateCells.get(dateKey) || {}
-                newDateCells.set(dateKey, {
-                  ...existing,
-                  ...(cellData as any),
-                })
-              })
-              return Object.fromEntries(newDateCells)
-            })()
-          : Object.fromEntries(dateCells)
-
-        const dataToSave = {
-          monthRange: resolvedMonthRange,
-          dateCells: mergedDateCells,
-          selectedColorTexture: loadedData.selectedColorTexture || selectedColorTexture,
-          selectedView: loadedData.selectedView || selectedView,
-          version: "3.0",
-        }
-        localStorage.setItem("calendar_data", JSON.stringify(dataToSave))
       } catch (error) {
         alert("Error loading data: Invalid JSON format")
         console.error("Error parsing loaded data:", error)
