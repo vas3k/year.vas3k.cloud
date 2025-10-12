@@ -70,6 +70,32 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     }
   }, [currentYear])
 
+  useEffect(() => {
+    const requestPersistentStorage = async () => {
+      if (navigator.storage && navigator.storage.persist) {
+        try {
+          const isPersisted = await navigator.storage.persisted()
+          if (isPersisted) {
+            console.log("Storage is already persistent")
+          } else {
+            const granted = await navigator.storage.persist()
+            if (granted) {
+              console.log("Persistent storage granted")
+            } else {
+              console.log("Persistent storage denied")
+            }
+          }
+        } catch (error) {
+          console.error("Error requesting persistent storage:", error)
+        }
+      } else {
+        console.log("Storage API not supported in this browser")
+      }
+    }
+
+    void requestPersistentStorage()
+  }, [])
+
   const saveToLocalStorage = (data: StoredData) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
