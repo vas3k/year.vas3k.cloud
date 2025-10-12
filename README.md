@@ -41,6 +41,6 @@ services:
       context: https://github.com/vas3k/year.vas3k.cloud.git
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "3000:80"
 ```
 

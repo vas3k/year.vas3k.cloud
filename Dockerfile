@@ -1,4 +1,5 @@
-FROM node:24-alpine
+# Build stage
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -10,11 +11,17 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
-# Ensure CRA dev server binds to all interfaces
-ENV HOST=0.0.0.0
-ENV PORT=3000
-ENV CHOKIDAR_USEPOLLING=true
+# Build the application
+RUN npm run build
 
-EXPOSE 3000
+# Production stage
+FROM nginx:alpine
 
-CMD ["npm", "run", "dev"]
+# Copy built files from builder stage
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
