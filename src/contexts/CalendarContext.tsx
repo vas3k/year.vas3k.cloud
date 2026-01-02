@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
-import { ColorTextureCode, DateCellData } from "../utils/colors"
+import { ColorTextureCode, DateCellData, DateCellsArray } from "../utils/colors"
 
 type CalendarView = "Linear" | "Classic" | "Column"
 
 interface CalendarContextType {
   selectedYear: number
   setSelectedYear: (year: number) => void
-  dateCells: Map<string, DateCellData>
-  setDateCells: (dateCells: Map<string, DateCellData>) => void
+  dateCells: Map<string, DateCellsArray>
+  setDateCells: (dateCells: Map<string, DateCellsArray>) => void
   selectedColorTexture: ColorTextureCode
   setSelectedColorTexture: (colorTexture: ColorTextureCode) => void
   selectedView: CalendarView
@@ -24,17 +24,31 @@ const STORAGE_KEY = "calendar_data"
 
 interface StoredData {
   selectedYear: number
-  dateCells: Record<string, DateCellData>
+  dateCells: Record<string, DateCellData | DateCellsArray>
   selectedColorTexture: ColorTextureCode
   selectedView: CalendarView
   version?: string
 }
 
-export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) => {
+// Helper to convert old single-cell format to new array format
+const normalizeDateCells = (dateCells: Record<string, DateCellData | DateCellsArray>): Map<string, DateCellsArray> => {
+  const result = new Map<string, DateCellsArray>()
+  for (const [key, value] of Object.entries(dateCells)) {
+    if (Array.isArray(value)) {
+      result.set(key, value)
+    } else {
+      // Convert old single-cell format to array
+      result.set(key, [value])
+    }
+  }
+  return result
+}
+
+export const CalendarProvider = ({ children }: CalendarProviderProps) => {
   const currentYear = new Date().getFullYear()
 
   const [selectedYear, setSelectedYearState] = useState(currentYear)
-  const [dateCells, setDateCellsState] = useState<Map<string, DateCellData>>(new Map())
+  const [dateCells, setDateCellsState] = useState<Map<string, DateCellsArray>>(new Map())
   const [selectedColorTexture, setSelectedColorTextureState] = useState<ColorTextureCode>("red")
   const [selectedView, setSelectedViewState] = useState<CalendarView>("Linear")
 
@@ -53,7 +67,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
         }
 
         if (parsedData.dateCells) {
-          const dateCellsMap = new Map(Object.entries(parsedData.dateCells))
+          const dateCellsMap = normalizeDateCells(parsedData.dateCells)
           setDateCellsState(dateCellsMap)
         }
 
@@ -88,7 +102,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     })
   }
 
-  const setDateCells = (newDateCells: Map<string, DateCellData>) => {
+  const setDateCells = (newDateCells: Map<string, DateCellsArray>) => {
     setDateCellsState(newDateCells)
     saveToLocalStorage({
       selectedYear,

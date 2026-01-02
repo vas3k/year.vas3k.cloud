@@ -1,26 +1,26 @@
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
+import { addCellToDate, applyColorToDate, ColorTextureCode, DateCellsArray, getDateKey, removeCellFromDate, UI_COLORS } from "../../utils/colors"
 import Day from "../Day"
 
 interface ColumnViewProps {
   selectedYear: number
-  dateCells: Map<string, DateCellData>
-  setDateCells: (dateCells: Map<string, DateCellData>) => void
+  dateCells: Map<string, DateCellsArray>
+  setDateCells: (dateCells: Map<string, DateCellsArray>) => void
   selectedColorTexture: ColorTextureCode
 }
 
 const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
-  const handleMouseDown = (date: Date) => {
+  const handleMouseDown = (date: Date, cellIndex: number) => {
     setIsDragging(true)
-    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
+    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells, cellIndex)
   }
 
-  const handleMouseEnter = (date: Date) => {
+  const handleMouseEnter = (date: Date, cellIndex: number) => {
     if (isDragging) {
-      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
+      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells, cellIndex)
     }
   }
 
@@ -41,26 +41,34 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
     }
   }, [])
 
-  const handleCustomTextChange = (date: Date, text: string) => {
+  const handleCustomTextChange = (date: Date, text: string, cellIndex: number = 0) => {
     const dateKey = getDateKey(date)
     const newDateCells = new Map(dateCells)
-    const currentCell = dateCells.get(dateKey) || {}
+    const currentCells = dateCells.get(dateKey) || [{}]
+    const newCells = [...currentCells]
+
+    // Ensure the cell at index exists
+    while (newCells.length <= cellIndex) {
+      newCells.push({})
+    }
 
     if (text.trim()) {
-      newDateCells.set(dateKey, {
-        ...currentCell,
+      newCells[cellIndex] = {
+        ...newCells[cellIndex],
         customText: text,
-      })
-    } else {
-      const updatedCell = { ...currentCell }
-      delete updatedCell.customText
-
-      // If the cell has no other properties, remove it entirely
-      if (Object.keys(updatedCell).length === 0) {
-        newDateCells.delete(dateKey)
-      } else {
-        newDateCells.set(dateKey, updatedCell)
       }
+    } else {
+      const updatedCell = { ...newCells[cellIndex] }
+      delete updatedCell.customText
+      newCells[cellIndex] = updatedCell
+    }
+
+    // Only delete the date if there's a single empty cell
+    // Keep multiple cells even if empty (user explicitly added them)
+    if (newCells.length === 1 && Object.keys(newCells[0]).length === 0) {
+      newDateCells.delete(dateKey)
+    } else {
+      newDateCells.set(dateKey, newCells)
     }
 
     setDateCells(newDateCells)
@@ -143,10 +151,8 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                 }
 
                 const dateKey = getDateKey(day)
-                const dayData = dateCells.get(dateKey) || {}
-                const isColored = !!(dayData.color || dayData.texture)
-                const dayColorTexture = dayData.color || dayData.texture
-                const customText = dayData.customText || ""
+                const dateCellsArray = dateCells.get(dateKey) || [{}]
+                const cellCount = dateCellsArray.length
 
                 return (
                   <td
@@ -154,21 +160,56 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                     style={{
                       padding: "0",
                       textAlign: "center",
-                      verticalAlign: "middle",
+                      verticalAlign: "top",
                       border: `1px solid ${UI_COLORS.border.tertiary}`,
-                      height: "40px",
+                      minHeight: "40px",
+                      height: "auto",
                     }}
                   >
-                    <Day
-                      date={day}
-                      isColored={isColored}
-                      colorTextureCode={dayColorTexture}
-                      onMouseDown={() => handleMouseDown(day)}
-                      onMouseEnter={() => handleMouseEnter(day)}
-                      onCustomTextChange={(text) => handleCustomTextChange(day, text)}
-                      customText={customText}
-                      customTextOverflow="overflow-y"
-                    />
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "stretch",
+                      }}
+                    >
+                      {dateCellsArray.map((cellData, cellIndex) => {
+                        const isColored = !!(cellData.color || cellData.texture)
+                        const dayColorTexture = cellData.color || cellData.texture
+                        const customText = cellData.customText || ""
+
+                        return (
+                          <div
+                            key={cellIndex}
+                            style={{
+                              width: `${100 / cellCount}%`,
+                              minWidth: "40px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              borderLeft: cellIndex > 0 ? `1px dashed ${UI_COLORS.border.secondary}` : "none",
+                            }}
+                          >
+                            <Day
+                              date={day}
+                              isColored={isColored}
+                              colorTextureCode={dayColorTexture}
+                              onMouseDown={() => handleMouseDown(day, cellIndex)}
+                              onMouseEnter={() => handleMouseEnter(day, cellIndex)}
+                              onCustomTextChange={(text) => handleCustomTextChange(day, text, cellIndex)}
+                              customText={customText}
+                              customTextOverflow="overflow-y"
+                              cellIndex={cellIndex}
+                              totalCells={dateCellsArray.length}
+                              onAddCell={() => addCellToDate(day, dateCells, setDateCells)}
+                              onRemoveCell={() => removeCellFromDate(day, dateCells, setDateCells, cellIndex)}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
                   </td>
                 )
               })}

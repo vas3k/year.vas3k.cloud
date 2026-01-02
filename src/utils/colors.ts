@@ -15,6 +15,9 @@ export interface DateCellData {
   customText?: string
 }
 
+// Array of cells for a single date (multi-line support)
+export type DateCellsArray = DateCellData[]
+
 export const COLORS: Record<ColorCode, string> = {
   red: "oklch(0.7003 0.2051 17.87)",
   orange: "oklch(0.847 0.2 60)",
@@ -93,13 +96,22 @@ export const getDateKey = (date: Date): string => {
 
 export const applyColorToDate = (
   date: Date,
-  dateCells: Map<string, DateCellData>,
+  dateCells: Map<string, DateCellsArray>,
   selectedColorTexture: ColorTextureCode,
-  setDateCells: (dateCells: Map<string, DateCellData>) => void
+  setDateCells: (dateCells: Map<string, DateCellsArray>) => void,
+  cellIndex: number = 0
 ) => {
   const dateKey = getDateKey(date)
   const newDateCells = new Map(dateCells)
-  const currentCell = dateCells.get(dateKey)
+  const currentCells = dateCells.get(dateKey) || [{}]
+  const newCells = [...currentCells]
+
+  // Ensure the cell at index exists
+  while (newCells.length <= cellIndex) {
+    newCells.push({})
+  }
+
+  const currentCell = newCells[cellIndex]
 
   // Check if the current selection matches what we're trying to apply
   const isColor = Object.keys(COLORS).includes(selectedColorTexture)
@@ -117,13 +129,7 @@ export const applyColorToDate = (
     } else if (isTexture) {
       delete updatedCell.texture
     }
-
-    // If the cell has no other properties, remove it entirely
-    if (Object.keys(updatedCell).length === 0) {
-      newDateCells.delete(dateKey)
-    } else {
-      newDateCells.set(dateKey, updatedCell)
-    }
+    newCells[cellIndex] = updatedCell
   } else {
     // Apply the new color/texture
     const updatedCell = { ...currentCell }
@@ -136,7 +142,55 @@ export const applyColorToDate = (
       // Remove any existing color when applying a texture
       delete updatedCell.color
     }
-    newDateCells.set(dateKey, updatedCell)
+    newCells[cellIndex] = updatedCell
+  }
+
+  // Only delete the date if there's a single empty cell
+  // Keep multiple cells even if empty (user explicitly added them)
+  if (newCells.length === 1 && Object.keys(newCells[0]).length === 0) {
+    newDateCells.delete(dateKey)
+  } else {
+    newDateCells.set(dateKey, newCells)
+  }
+
+  setDateCells(newDateCells)
+}
+
+export const addCellToDate = (
+  date: Date,
+  dateCells: Map<string, DateCellsArray>,
+  setDateCells: (dateCells: Map<string, DateCellsArray>) => void
+) => {
+  const dateKey = getDateKey(date)
+  const newDateCells = new Map(dateCells)
+  const currentCells = dateCells.get(dateKey) || [{}]
+  const newCells = [...currentCells, {}]
+  newDateCells.set(dateKey, newCells)
+  setDateCells(newDateCells)
+}
+
+export const removeCellFromDate = (
+  date: Date,
+  dateCells: Map<string, DateCellsArray>,
+  setDateCells: (dateCells: Map<string, DateCellsArray>) => void,
+  cellIndex: number
+) => {
+  const dateKey = getDateKey(date)
+  const currentCells = dateCells.get(dateKey) || [{}]
+
+  // Only remove if there's more than one cell
+  if (currentCells.length <= 1) {
+    return
+  }
+
+  const newDateCells = new Map(dateCells)
+  const newCells = currentCells.filter((_, i) => i !== cellIndex)
+
+  // If only empty cells remain, clean up
+  if (newCells.length === 1 && Object.keys(newCells[0]).length === 0) {
+    newDateCells.delete(dateKey)
+  } else {
+    newDateCells.set(dateKey, newCells)
   }
 
   setDateCells(newDateCells)
