@@ -13,6 +13,10 @@ interface DayProps {
   customText?: string
   onCustomTextChange?: (text: string) => void
   customTextOverflow?: "overflow-x" | "overflow-y" | "no-overflow"
+  cellIndex?: number
+  totalCells?: number
+  onAddCell?: () => void
+  onRemoveCell?: () => void
 }
 
 const Day: React.FC<DayProps> = ({
@@ -25,6 +29,10 @@ const Day: React.FC<DayProps> = ({
   customText = "",
   onCustomTextChange,
   customTextOverflow = "overflow-x",
+  cellIndex = 0,
+  totalCells = 1,
+  onAddCell,
+  onRemoveCell,
 }) => {
   const dayNumber = date.getDate()
   const [isHovered, setIsHovered] = useState(false)
@@ -107,18 +115,39 @@ const Day: React.FC<DayProps> = ({
 
   const hasCustomText = customText.trim().length > 0 || isCreatingCustomText
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget) {
+      return
+    }
+    // Ctrl+Alt+click: remove cell (only if more than 1 cell exists)
+    if (e.ctrlKey && e.altKey && onRemoveCell && totalCells > 1) {
+      e.preventDefault()
+      e.stopPropagation()
+      onRemoveCell()
+      return
+    }
+    // Ctrl+click: add new cell below
+    if (e.ctrlKey && onAddCell) {
+      e.preventDefault()
+      e.stopPropagation()
+      onAddCell()
+      return
+    }
+    if (onClick) onClick()
+  }
+
   return (
     <div
       className="day"
       data-colored={isColored ? "true" : "false"}
-      onClick={(e) => {
+      data-cell-index={cellIndex}
+      onClick={handleClick}
+      onPointerDown={(e) => {
         if (e.target !== e.currentTarget) {
           return
         }
-        if (onClick) onClick()
-      }}
-      onPointerDown={(e) => {
-        if (e.target !== e.currentTarget) {
+        // Don't apply color on ctrl+click or ctrl+alt+click
+        if (e.ctrlKey) {
           return
         }
         if (onMouseDown) onMouseDown()
@@ -135,7 +164,8 @@ const Day: React.FC<DayProps> = ({
         padding: "4px",
         textAlign: "center",
         width: "100%",
-        height: "100%",
+        flex: 1,
+        minHeight: "50px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

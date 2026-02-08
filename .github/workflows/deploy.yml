@@ -34,7 +34,7 @@ jobs:
           # cache-dependency-path: "package-lock.json" # uncomment if your lockfile is not at repo root
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
         # working-directory: ./your-app   # uncomment and set if app is in a subfolder
 
       - name: Build

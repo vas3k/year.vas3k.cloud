@@ -1,6 +1,6 @@
 import React, { useRef } from "react"
 import { useCalendar } from "../contexts/CalendarContext"
-import { UI_COLORS } from "../utils/colors"
+import { DateCellData, DateCellsArray, UI_COLORS } from "../utils/colors"
 
 const SaveLoadData: React.FC = () => {
   const {
@@ -23,7 +23,7 @@ const SaveLoadData: React.FC = () => {
       selectedColorTexture,
       selectedView,
       exportDate: new Date().toISOString(),
-      version: "2.0",
+      version: "3.0",
     }
 
     const blob = new Blob([JSON.stringify(dataToSave, null, 2)], {
@@ -45,6 +45,14 @@ const SaveLoadData: React.FC = () => {
     }
   }
 
+  // Helper to convert old single-cell format to new array format
+  const normalizeCellData = (cellData: DateCellData | DateCellsArray): DateCellsArray => {
+    if (Array.isArray(cellData)) {
+      return cellData
+    }
+    return [cellData]
+  }
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -63,11 +71,19 @@ const SaveLoadData: React.FC = () => {
           const newDateCells = new Map(dateCells)
 
           Object.entries(loadedData.dateCells).forEach(([dateKey, cellData]) => {
-            const existing = newDateCells.get(dateKey) || {}
-            newDateCells.set(dateKey, {
-              ...existing,
-              ...(cellData as any),
-            })
+            const normalizedData = normalizeCellData(cellData as DateCellData | DateCellsArray)
+            const existing = newDateCells.get(dateKey) || [{}]
+
+            // Merge: combine existing cells with loaded cells
+            const mergedCells: DateCellsArray = []
+            const maxLength = Math.max(existing.length, normalizedData.length)
+            for (let i = 0; i < maxLength; i++) {
+              mergedCells.push({
+                ...(existing[i] || {}),
+                ...(normalizedData[i] || {}),
+              })
+            }
+            newDateCells.set(dateKey, mergedCells)
           })
           setDateCells(newDateCells)
         }
@@ -86,11 +102,18 @@ const SaveLoadData: React.FC = () => {
           ? (() => {
               const newDateCells = new Map(dateCells)
               Object.entries(loadedData.dateCells).forEach(([dateKey, cellData]) => {
-                const existing = newDateCells.get(dateKey) || {}
-                newDateCells.set(dateKey, {
-                  ...existing,
-                  ...(cellData as any),
-                })
+                const normalizedData = normalizeCellData(cellData as DateCellData | DateCellsArray)
+                const existing = newDateCells.get(dateKey) || [{}]
+
+                const mergedCells: DateCellsArray = []
+                const maxLength = Math.max(existing.length, normalizedData.length)
+                for (let i = 0; i < maxLength; i++) {
+                  mergedCells.push({
+                    ...(existing[i] || {}),
+                    ...(normalizedData[i] || {}),
+                  })
+                }
+                newDateCells.set(dateKey, mergedCells)
               })
               return Object.fromEntries(newDateCells)
             })()

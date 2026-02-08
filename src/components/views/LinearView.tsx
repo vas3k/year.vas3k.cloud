@@ -1,12 +1,12 @@
 import { addDays, eachDayOfInterval, endOfYear, format, getDay, isSameMonth, startOfYear, subDays } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
+import { addCellToDate, applyColorToDate, ColorTextureCode, DateCellsArray, getDateKey, removeCellFromDate, UI_COLORS } from "../../utils/colors"
 import Day from "../Day"
 
 interface LinearViewProps {
   selectedYear: number
-  dateCells: Map<string, DateCellData>
-  setDateCells: (dateCells: Map<string, DateCellData>) => void
+  dateCells: Map<string, DateCellsArray>
+  setDateCells: (dateCells: Map<string, DateCellsArray>) => void
   selectedColorTexture: ColorTextureCode
 }
 
@@ -21,14 +21,14 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
 
   const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
-  const handleMouseDown = (date: Date) => {
+  const handleMouseDown = (date: Date, cellIndex: number) => {
     setIsDragging(true)
-    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
+    applyColorToDate(date, dateCells, selectedColorTexture, setDateCells, cellIndex)
   }
 
-  const handleMouseEnter = (date: Date) => {
+  const handleMouseEnter = (date: Date, cellIndex: number) => {
     if (isDragging) {
-      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells)
+      applyColorToDate(date, dateCells, selectedColorTexture, setDateCells, cellIndex)
     }
   }
 
@@ -49,26 +49,34 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
     }
   }, [])
 
-  const handleCustomTextChange = (date: Date, text: string) => {
+  const handleCustomTextChange = (date: Date, text: string, cellIndex: number = 0) => {
     const dateKey = getDateKey(date)
     const newDateCells = new Map(dateCells)
-    const currentCell = dateCells.get(dateKey) || {}
+    const currentCells = dateCells.get(dateKey) || [{}]
+    const newCells = [...currentCells]
+
+    // Ensure the cell at index exists
+    while (newCells.length <= cellIndex) {
+      newCells.push({})
+    }
 
     if (text.trim()) {
-      newDateCells.set(dateKey, {
-        ...currentCell,
+      newCells[cellIndex] = {
+        ...newCells[cellIndex],
         customText: text,
-      })
-    } else {
-      const updatedCell = { ...currentCell }
-      delete updatedCell.customText
-
-      // If the cell has no other properties, remove it entirely
-      if (Object.keys(updatedCell).length === 0) {
-        newDateCells.delete(dateKey)
-      } else {
-        newDateCells.set(dateKey, updatedCell)
       }
+    } else {
+      const updatedCell = { ...newCells[cellIndex] }
+      delete updatedCell.customText
+      newCells[cellIndex] = updatedCell
+    }
+
+    // Only delete the date if there's a single empty cell
+    // Keep multiple cells even if empty (user explicitly added them)
+    if (newCells.length === 1 && Object.keys(newCells[0]).length === 0) {
+      newDateCells.delete(dateKey)
+    } else {
+      newDateCells.set(dateKey, newCells)
     }
 
     setDateCells(newDateCells)
@@ -184,7 +192,7 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
   const getDayBorderStyles = (day: Date | null, dayIndex: number, weekIndex: number): React.CSSProperties => {
     if (!day) {
       return {
-        border: `1px solid ${UI_COLORS.border.secondary}`,
+        border: `2px solid ${UI_COLORS.border.secondary}`,
         backgroundColor: UI_COLORS.background.tertiary,
       }
     }
@@ -211,23 +219,24 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
     const isLeftEdge = isFirstDayOfWeek
     const isRightEdge = isLastDayOfWeek
 
+    // Use consistent 2px border width everywhere, just vary the color
     return {
       borderTop:
         isTopEdge || hasDifferentMonthAbove
           ? `2px solid ${UI_COLORS.border.primary}`
-          : `1px solid ${UI_COLORS.border.secondary}`,
+          : `2px solid ${UI_COLORS.border.secondary}`,
       borderRight:
         isRightEdge || hasDifferentMonthRight
           ? `2px solid ${UI_COLORS.border.primary}`
-          : `1px solid ${UI_COLORS.border.secondary}`,
+          : `2px solid ${UI_COLORS.border.secondary}`,
       borderBottom:
         isBottomEdge || hasDifferentMonthBelow
           ? `2px solid ${UI_COLORS.border.primary}`
-          : `1px solid ${UI_COLORS.border.secondary}`,
+          : `2px solid ${UI_COLORS.border.secondary}`,
       borderLeft:
         isLeftEdge || hasDifferentMonthLeft
           ? `2px solid ${UI_COLORS.border.primary}`
-          : `1px solid ${UI_COLORS.border.secondary}`,
+          : `2px solid ${UI_COLORS.border.secondary}`,
     }
   }
 
@@ -304,10 +313,7 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
                 {/* Day cells */}
                 {week.map((day, dayIndex) => {
                   const dateKey = getDateKey(day)
-                  const dateCellData = dateCells.get(dateKey) || {}
-                  const isColored = !!(dateCellData.color || dateCellData.texture)
-                  const dayColorTexture = dateCellData.color || dateCellData.texture
-                  const customText = dateCellData.customText || ""
+                  const dateCellsArray = dateCells.get(dateKey) || [{}]
 
                   return (
                     <td
@@ -315,8 +321,10 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
                       style={{
                         padding: "0",
                         textAlign: "center",
-                        verticalAlign: "middle",
-                        height: "50px",
+                        verticalAlign: "top",
+                        minHeight: "50px",
+                        height: "auto",
+                        boxSizing: "border-box",
                         ...getDayBorderStyles(day, dayIndex, weekIndex),
                       }}
                     >
@@ -325,21 +333,45 @@ const LinearView: React.FC<LinearViewProps> = ({ selectedYear, dateCells, setDat
                           width: "100%",
                           height: "100%",
                           display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
+                          flexDirection: "column",
+                          alignItems: "stretch",
+                          justifyContent: "stretch",
                         }}
                       >
-                        <Day
-                          key={dayIndex}
-                          date={day}
-                          isColored={isColored}
-                          colorTextureCode={dayColorTexture}
-                          onMouseDown={() => handleMouseDown(day)}
-                          onMouseEnter={() => handleMouseEnter(day)}
-                          onCustomTextChange={(text) => handleCustomTextChange(day, text)}
-                          customText={customText}
-                          customTextOverflow="overflow-x"
-                        />
+                        {dateCellsArray.map((cellData, cellIndex) => {
+                          const isColored = !!(cellData.color || cellData.texture)
+                          const dayColorTexture = cellData.color || cellData.texture
+                          const customText = cellData.customText || ""
+
+                          return (
+                            <div
+                              key={cellIndex}
+                              style={{
+                                flex: 1,
+                                minHeight: "50px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderTop: cellIndex > 0 ? `1px dashed ${UI_COLORS.border.secondary}` : "none",
+                              }}
+                            >
+                              <Day
+                                date={day}
+                                isColored={isColored}
+                                colorTextureCode={dayColorTexture}
+                                onMouseDown={() => handleMouseDown(day, cellIndex)}
+                                onMouseEnter={() => handleMouseEnter(day, cellIndex)}
+                                onCustomTextChange={(text) => handleCustomTextChange(day, text, cellIndex)}
+                                customText={customText}
+                                customTextOverflow="overflow-x"
+                                cellIndex={cellIndex}
+                                totalCells={dateCellsArray.length}
+                                onAddCell={() => addCellToDate(day, dateCells, setDateCells)}
+                                onRemoveCell={() => removeCellFromDate(day, dateCells, setDateCells, cellIndex)}
+                              />
+                            </div>
+                          )
+                        })}
                       </div>
                     </td>
                   )
