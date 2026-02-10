@@ -1,16 +1,17 @@
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { applyColorToDate, ColorTextureCode, DateCellData, getDateKey, UI_COLORS } from "../../utils/colors"
+import { enumerateMonths, MonthPointer, MonthRange, monthPointerToDate } from "../../utils/monthRange"
 import Day from "../Day"
 
 interface ColumnViewProps {
-  selectedYear: number
+  monthRange: MonthRange
   dateCells: Map<string, DateCellData>
   setDateCells: (dateCells: Map<string, DateCellData>) => void
   selectedColorTexture: ColorTextureCode
 }
 
-const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDateCells, selectedColorTexture }) => {
+const ColumnView: React.FC<ColumnViewProps> = ({ monthRange, dateCells, setDateCells, selectedColorTexture }) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const handleMouseDown = (date: Date) => {
@@ -66,22 +67,23 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
     setDateCells(newDateCells)
   }
 
-  const getDaysForMonth = (month: number): Date[] => {
-    const startDate = startOfMonth(new Date(selectedYear, month, 1))
-    const endDate = endOfMonth(new Date(selectedYear, month, 1))
+  const getDaysForMonth = (monthPointer: MonthPointer): Date[] => {
+    const baseDate = monthPointerToDate(monthPointer)
+    const startDate = startOfMonth(baseDate)
+    const endDate = endOfMonth(baseDate)
     return eachDayOfInterval({ start: startDate, end: endDate })
   }
 
-  const getMonthName = (month: number): string => {
-    return format(new Date(selectedYear, month, 1), "MMMM")
+  const getMonthName = (monthPointer: MonthPointer): string => {
+    return format(monthPointerToDate(monthPointer), "MMMM yyyy")
   }
 
-  const getMaxDaysInYear = (): number => {
-    return Math.max(...Array.from({ length: 12 }, (_, i) => getDaysForMonth(i).length))
-  }
+  const months = enumerateMonths(monthRange)
 
-  const months = Array.from({ length: 12 }, (_, i) => i)
-  const maxDays = getMaxDaysInYear()
+  const getMaxDaysInRange = (): number => {
+    return Math.max(...months.map((month) => getDaysForMonth(month).length))
+  }
+  const maxDays = getMaxDaysInRange()
 
   return (
     <div
@@ -103,7 +105,7 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
           <tr style={{ borderBottom: `2px solid ${UI_COLORS.border.primary}` }}>
             {months.map((month) => (
               <th
-                key={month}
+                key={`${month.year}-${month.month}`}
                 style={{
                   padding: "12px 8px",
                   textAlign: "center",
@@ -111,7 +113,7 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                   fontSize: "16px",
                   borderRight: `1px solid ${UI_COLORS.border.secondary}`,
                   backgroundColor: UI_COLORS.background.secondary,
-                  width: `${100 / 12}%`, // Equal width for all columns
+                  width: `${100 / months.length}%`,
                 }}
               >
                 {getMonthName(month)}
@@ -129,7 +131,7 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
                 if (!day) {
                   return (
                     <td
-                      key={month}
+                      key={`${month.year}-${month.month}`}
                       style={{
                         padding: "0",
                         textAlign: "center",
@@ -150,7 +152,7 @@ const ColumnView: React.FC<ColumnViewProps> = ({ selectedYear, dateCells, setDat
 
                 return (
                   <td
-                    key={month}
+                    key={`${month.year}-${month.month}`}
                     style={{
                       padding: "0",
                       textAlign: "center",

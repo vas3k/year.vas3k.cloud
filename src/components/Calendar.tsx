@@ -1,6 +1,7 @@
 import React from "react"
 import { useCalendar } from "../contexts/CalendarContext"
 import CalendarTitle from "./CalendarTitle"
+import CalendarSharingControls from "./CalendarSharingControls"
 import ColorPicker from "./ColorPicker"
 import SaveLoadData from "./SaveLoadData"
 import ClassicView from "./views/ClassicView"
@@ -9,33 +10,34 @@ import LinearView from "./views/LinearView"
 import ViewSelector from "./ViewSelector"
 
 const Calendar: React.FC = () => {
-  const { selectedYear, dateCells, setDateCells, selectedColorTexture, selectedView, setSelectedView } = useCalendar()
+  const { monthRange, dateCells, setDateCells, selectedColorTexture, selectedView, setSelectedView } = useCalendar()
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <CalendarTitle />
       <div className="no-print">
+        <CalendarSharingControls />
         <ColorPicker />
         <ViewSelector selectedView={selectedView} onViewChange={setSelectedView} />
       </div>
 
       {selectedView === "Linear" ? (
         <LinearView
-          selectedYear={selectedYear}
+          monthRange={monthRange}
           dateCells={dateCells}
           setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
         />
       ) : selectedView === "Classic" ? (
         <ClassicView
-          selectedYear={selectedYear}
+          monthRange={monthRange}
           dateCells={dateCells}
           setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}
         />
       ) : (
         <ColumnView
-          selectedYear={selectedYear}
+          monthRange={monthRange}
           dateCells={dateCells}
           setDateCells={setDateCells}
           selectedColorTexture={selectedColorTexture}

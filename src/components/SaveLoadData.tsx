@@ -1,15 +1,16 @@
 import React, { useRef } from "react"
 import { useCalendar } from "../contexts/CalendarContext"
 import { UI_COLORS } from "../utils/colors"
+import { createDefaultMonthRange, ensureValidRange, isValidMonthPointer } from "../utils/monthRange"
 
 const SaveLoadData: React.FC = () => {
   const {
-    selectedYear,
+    monthRange,
     dateCells,
     selectedColorTexture,
     selectedView,
     setDateCells,
-    setSelectedYear,
+    setMonthRange,
     setSelectedColorTexture,
     setSelectedView,
   } = useCalendar()
@@ -18,12 +19,12 @@ const SaveLoadData: React.FC = () => {
 
   const handleSaveData = () => {
     const dataToSave = {
-      selectedYear,
+      monthRange,
       dateCells: Object.fromEntries(dateCells),
       selectedColorTexture,
       selectedView,
       exportDate: new Date().toISOString(),
-      version: "2.0",
+      version: "3.0",
     }
 
     const blob = new Blob([JSON.stringify(dataToSave, null, 2)], {
@@ -72,8 +73,20 @@ const SaveLoadData: React.FC = () => {
           setDateCells(newDateCells)
         }
 
-        if (loadedData.selectedYear && typeof loadedData.selectedYear === "number") {
-          setSelectedYear(loadedData.selectedYear)
+        let resolvedMonthRange = monthRange
+
+        if (
+          loadedData.monthRange &&
+          loadedData.monthRange.start &&
+          loadedData.monthRange.end &&
+          isValidMonthPointer(loadedData.monthRange.start) &&
+          isValidMonthPointer(loadedData.monthRange.end)
+        ) {
+          resolvedMonthRange = ensureValidRange(loadedData.monthRange)
+          setMonthRange(resolvedMonthRange)
+        } else if (loadedData.selectedYear && typeof loadedData.selectedYear === "number") {
+          resolvedMonthRange = createDefaultMonthRange(loadedData.selectedYear)
+          setMonthRange(resolvedMonthRange)
         }
         if (loadedData.selectedColorTexture && typeof loadedData.selectedColorTexture === "string") {
           setSelectedColorTexture(loadedData.selectedColorTexture)
@@ -82,27 +95,6 @@ const SaveLoadData: React.FC = () => {
           setSelectedView(loadedData.selectedView)
         }
 
-        const mergedDateCells = loadedData.dateCells
-          ? (() => {
-              const newDateCells = new Map(dateCells)
-              Object.entries(loadedData.dateCells).forEach(([dateKey, cellData]) => {
-                const existing = newDateCells.get(dateKey) || {}
-                newDateCells.set(dateKey, {
-                  ...existing,
-                  ...(cellData as any),
-                })
-              })
-              return Object.fromEntries(newDateCells)
-            })()
-          : Object.fromEntries(dateCells)
-
-        const dataToSave = {
-          selectedYear: loadedData.selectedYear || selectedYear,
-          dateCells: mergedDateCells,
-          selectedColorTexture: loadedData.selectedColorTexture || selectedColorTexture,
-          selectedView: loadedData.selectedView || selectedView,
-        }
-        localStorage.setItem("calendar_data", JSON.stringify(dataToSave))
       } catch (error) {
         alert("Error loading data: Invalid JSON format")
         console.error("Error parsing loaded data:", error)
@@ -116,7 +108,7 @@ const SaveLoadData: React.FC = () => {
   const handleCleanAll = () => {
     if (window.confirm("Are you sure you want to delete all data? This action cannot be undone.")) {
       setDateCells(new Map())
-      setSelectedYear(new Date().getFullYear())
+      setMonthRange(createDefaultMonthRange(new Date().getFullYear()))
       setSelectedColorTexture("red")
       setSelectedView("Linear")
 
